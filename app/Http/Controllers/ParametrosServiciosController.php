@@ -16,8 +16,8 @@ class ParametrosServiciosController extends Controller
     public function index()
     {
         $parametrosServicios = Parametros_Servicios::all();
-
         $datos = [];
+
         foreach ($parametrosServicios as $parametroServicio) {
             $datos[] = [
                 'ID' => $parametroServicio->IdParametroServicio,
@@ -26,15 +26,15 @@ class ParametrosServiciosController extends Controller
             ];
         }
 
-        if(!empty($parametroServicio)){
+        if (!empty($parametroServicio)) {
             return response()->json($datos);
-        }else{
+        } else {
             $mensaje = [
                 'Mensaje' => "No hay datos por mostrar",
             ];
+            
             return response()->json($mensaje);
         }
-
     }
 
     /**
@@ -59,32 +59,33 @@ class ParametrosServiciosController extends Controller
             $parametro = new Parametros_Servicios();
 
             $reglas = [
-                'Nombre'=>'required|string',
-                'Descripcion'=>'required|string',
+                'Nombre' => 'required|string',
+                'Descripcion' => 'required|string',
             ];
 
             $validator = Validator::make($request->all(), $reglas);
+
             if ($validator->fails()) {
                 $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
                     'Mensaje' => "No pueden existir campos vacíos",
                     'Error' => $validator->errors()->all()
                 ];
+
                 return response()->json($mensaje);
-            }else{
+            } else {
 
                 $parametro->Nombre = $request->Nombre;
                 $parametro->Descripcion = $request->Descripcion;
                 $parametro->save();
-    
+
                 $mensaje = [
                     'Respuesta del Servidor' => "201 Created",
                     'Mensaje' => "Parametro agregado correctamente",
                     'Datos' => $parametro
                 ];
+
                 return response()->json($mensaje);
             }
-
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 409 Conflict",
@@ -112,6 +113,7 @@ class ParametrosServiciosController extends Controller
                 'Nombre' => $parametro->Nombre,
                 'Descripcion' => $parametro->Descripcion
             ];
+
             return response()->json($mensaje);
         } else {
             $mensaje = [
@@ -143,24 +145,24 @@ class ParametrosServiciosController extends Controller
      */
     public function update(Request $request)
     {
-       
         try {
-
             $parametro = Parametros_Servicios::find($request->IdParametroServicio);
+
             $reglas = [
-                'Nombre'=>'required|string',
-                'Descripcion'=>'required|string',
+                'Nombre' => 'required|string',
+                'Descripcion' => 'required|string',
             ];
 
             $validator = Validator::make($request->all(), $reglas);
+
             if ($validator->fails()) {
                 $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
                     'Mensaje' => "No pueden existir campos vacíos",
                     'Error' => $validator->errors()->all()
                 ];
+
                 return response()->json($mensaje);
-            }else{
+            } else {
                 $parametro->Nombre = $request->Nombre;
                 $parametro->Descripcion = $request->Descripcion;
                 $parametro->save();
@@ -175,12 +177,12 @@ class ParametrosServiciosController extends Controller
 
                 return response()->json($mensaje);
             }
-
         } catch (\Throwable $th) {
-                $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
-                    'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServicio}"
-                ];
+            $mensaje = [
+                'Respuesta del Servidor' => "Error 404 Not Found",
+                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServicio}"
+            ];
+
             return response()->json($mensaje);
         }
     }

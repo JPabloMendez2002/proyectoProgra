@@ -16,8 +16,8 @@ class ParametrosServidoresController extends Controller
     public function index()
     {
         $parametrosServidores = Parametros_Servidores::all();
-
         $datos = [];
+        
         foreach ($parametrosServidores as $parametroServidor) {
             $datos[] = [
                 'ID' => $parametroServidor->IdParametroServidor,
@@ -26,15 +26,15 @@ class ParametrosServidoresController extends Controller
             ];
         }
 
-        if(!empty($parametroServidor)){
+        if (!empty($parametroServidor)) {
             return response()->json($datos);
-        }else{
+        } else {
             $mensaje = [
                 'Mensaje' => "No hay datos por mostrar",
             ];
+
             return response()->json($mensaje);
         }
-      
     }
 
     /**
@@ -59,33 +59,31 @@ class ParametrosServidoresController extends Controller
             $parametro = new Parametros_Servidores();
 
             $reglas = [
-                'Nombre'=>'required|string',
-                'Descripcion'=>'required|string',
+                'Nombre' => 'required|string',
+                'Descripcion' => 'required|string',
             ];
-
 
             $validator = Validator::make($request->all(), $reglas);
             if ($validator->fails()) {
                 $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
                     'Mensaje' => "No pueden existir campos vacíos",
                     'Error' => $validator->errors()->all()
                 ];
+
                 return response()->json($mensaje);
-            }else{
+            } else {
                 $parametro->Nombre = $request->Nombre;
                 $parametro->Descripcion = $request->Descripcion;
                 $parametro->save();
+
                 $mensaje = [
                     'Respuesta del Servidor' => "201 Created",
                     'Mensaje' => "Parametro agregado correctamente",
                     'Datos' => $parametro
                 ];
-    
+
                 return response()->json($mensaje);
             }
-
-         
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 409 Conflict",
@@ -113,6 +111,7 @@ class ParametrosServidoresController extends Controller
                 'Nombre' => $parametro->Nombre,
                 'Descripcion' => $parametro->Descripcion
             ];
+
             return response()->json($mensaje);
         } else {
             $mensaje = [
@@ -144,24 +143,24 @@ class ParametrosServidoresController extends Controller
      */
     public function update(Request $request)
     {
-
         try {
             $parametro = Parametros_Servidores::find($request->IdParametroServidor);
 
             $reglas = [
-                'Nombre'=>'required|string',
-                'Descripcion'=>'required|string',
+                'Nombre' => 'required|string',
+                'Descripcion' => 'required|string',
             ];
 
             $validator = Validator::make($request->all(), $reglas);
+
             if ($validator->fails()) {
                 $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
                     'Mensaje' => "No pueden existir campos vacíos",
                     'Error' => $validator->errors()->all()
                 ];
+
                 return response()->json($mensaje);
-            }else{
+            } else {
                 $parametro->Descripcion = $request->Descripcion;
                 $parametro->Nombre = $request->Nombre;
                 $parametro->save();
@@ -176,12 +175,12 @@ class ParametrosServidoresController extends Controller
 
                 return response()->json($mensaje);
             }
-
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
                 'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServidor}"
             ];
+
             return response()->json($mensaje);
         }
     }

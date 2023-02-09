@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Intervalo;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\In;
 
 class IntervaloController extends Controller
 {
@@ -19,7 +18,7 @@ class IntervaloController extends Controller
     {
         $intervalos = Intervalo::all();
         $datos = [];
- 
+
         foreach ($intervalos as $intervalo) {
             $datos[] = [
                 'ID' => $intervalo->IdIntervalo,
@@ -27,18 +26,15 @@ class IntervaloController extends Controller
                 'Descripcion' => $intervalo->Descripcion
             ];
         }
-     
-        if(!empty($intervalo)){
-            return response()->json($datos);
-        }else{
 
+        if (!empty($intervalo)) {
+            return response()->json($datos);
+        } else {
             $mensaje = [
                 'Mensaje' => "No hay datos por mostrar",
             ];
             return response()->json($mensaje);
         }
-
-       
     }
 
     /**
@@ -48,7 +44,6 @@ class IntervaloController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -59,34 +54,37 @@ class IntervaloController extends Controller
      */
     public function store(Request $request)
     {
-         try {
-
+        try {
             $intervalo = new Intervalo();
+
             $reglas = [
-                'Nombre'=>'required|string',
-                'Descripcion'=>'required|string',
+                'Nombre' => 'required|string',
+                'Descripcion' => 'required|string',
             ];
 
             $validator = Validator::make($request->all(), $reglas);
-            if($validator->fails()){
+
+            if ($validator->fails()) {
+
                 $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
                     'Mensaje' => "No pueden existir campos vacíos",
                     'Error' => $validator->errors()->all()
                 ];
+
                 return response()->json($mensaje);
-            }else{
+            } else {
                 $intervalo->Nombre = $request->Nombre;
                 $intervalo->Descripcion = $request->Descripcion;
                 $intervalo->save();
+
                 $mensaje = [
                     'Respuesta del Servidor' => "201 Created",
                     'Mensaje' => "Intervalo agregado correctamente",
                     'Datos' => $intervalo
                 ];
+
                 return response()->json($mensaje);
             }
-
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 409 Conflict",
@@ -115,12 +113,14 @@ class IntervaloController extends Controller
                 'Nombre' => $intervalo->Nombre,
                 'Descripcion' => $intervalo->Descripcion
             ];
+
             return response()->json($mensaje);
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
                 'Mensaje' => "No se encontro el intervalo con ID: {$request->IdIntervalo}"
             ];
+
             return response()->json($mensaje);
         }
     }
@@ -145,24 +145,25 @@ class IntervaloController extends Controller
      */
     public function update(Request $request)
     {
-
         try {
-
             $intervalo = Intervalo::find($request->IdIntervalo);
+
             $reglas = [
-                'Nombre'=>'required|string',
-                'Descripcion'=>'required|string',
+                'Nombre' => 'required|string',
+                'Descripcion' => 'required|string',
             ];
 
             $validator = Validator::make($request->all(), $reglas);
+
             if ($validator->fails()) {
+
                 $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
                     'Mensaje' => "No pueden existir campos vacíos",
                     'Error' => $validator->errors()->all()
                 ];
+
                 return response()->json($mensaje);
-            }else{
+            } else {
                 $intervalo->Nombre = $request->Nombre;
                 $intervalo->Descripcion = $request->Descripcion;
                 $intervalo->save();
@@ -177,12 +178,12 @@ class IntervaloController extends Controller
 
                 return response()->json($mensaje);
             }
-
         } catch (\Throwable $th) {
-                $mensaje = [
-                    'Respuesta del Servidor' => "Error 404 Not Found",
-                    'Mensaje' => "No se encontro el intervalo con ID: {$request->IdIntervalo}"
-                ];
+            $mensaje = [
+                'Respuesta del Servidor' => "Error 404 Not Found",
+                'Mensaje' => "No se encontro el intervalo con ID: {$request->IdIntervalo}"
+            ];
+            
             return response()->json($mensaje);
         }
     }
@@ -195,7 +196,7 @@ class IntervaloController extends Controller
      */
     public function destroy(Request $request)
     {
-        
+
         $intervalo = Intervalo::destroy($request->IdIntervalo);
 
         if ($intervalo) {
