@@ -51,7 +51,8 @@ class RolController extends Controller
 
         $mensaje = [
             'Respuesta del Servidor' => "201 Created",
-            'Mensaje' => "Rol agregado correctamente {$rol}"
+            'Mensaje' => "Rol agregado correctamente",
+            'Datos' => $rol
         ];
 
         return response()->json($mensaje);

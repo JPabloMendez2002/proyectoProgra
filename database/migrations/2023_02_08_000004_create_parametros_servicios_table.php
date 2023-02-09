@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('Parametros_Servicios', function (Blueprint $table) {
             $table->id('IdParametroServicio');
-            $table->string('Nombre',20);
+            $table->string('Nombre',20)->unique();;
             $table->text('Descripcion');
             $table->timestamps();
         });
