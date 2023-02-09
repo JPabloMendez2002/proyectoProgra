@@ -24,7 +24,7 @@ class RolController extends Controller
             ];
         }
 
-        return response()->json($roles);
+        return response()->json($datos);
     }
 
     /**
