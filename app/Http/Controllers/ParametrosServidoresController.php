@@ -17,10 +17,11 @@ class ParametrosServidoresController extends Controller
     {
         $parametrosServidores = Parametros_Servidores::all();
         $datos = [];
-        
+
         foreach ($parametrosServidores as $parametroServidor) {
             $datos[] = [
                 'ID' => $parametroServidor->IdParametroServidor,
+                'IdServidor' => $parametroServidor->IdServidor,
                 'Nombre' => $parametroServidor->Nombre,
                 'Descripcion' => $parametroServidor->Descripcion
             ];
@@ -60,6 +61,7 @@ class ParametrosServidoresController extends Controller
 
             $reglas = [
                 'Nombre' => 'required|string',
+                'IdServidor' => 'required|integer',
                 'Descripcion' => 'required|string',
             ];
 
@@ -73,6 +75,7 @@ class ParametrosServidoresController extends Controller
                 return response()->json($mensaje);
             } else {
                 $parametro->Nombre = $request->Nombre;
+                $parametro->IdServidor = $request->IdServidor;
                 $parametro->Descripcion = $request->Descripcion;
                 $parametro->save();
 
@@ -108,6 +111,7 @@ class ParametrosServidoresController extends Controller
             $mensaje = [
                 'Respuesta del Servidor' => "200 OK",
                 'ID' => $parametro->IdParametroServidor,
+                'IdServidor' => $parametro->IdServidor,
                 'Nombre' => $parametro->Nombre,
                 'Descripcion' => $parametro->Descripcion
             ];
@@ -148,6 +152,7 @@ class ParametrosServidoresController extends Controller
 
             $reglas = [
                 'Nombre' => 'required|string',
+                'IdServidor' => 'required|integer',
                 'Descripcion' => 'required|string',
             ];
 
@@ -161,14 +166,16 @@ class ParametrosServidoresController extends Controller
 
                 return response()->json($mensaje);
             } else {
-                $parametro->Descripcion = $request->Descripcion;
+                $parametro->IdServidor = $request->IdServidor;
                 $parametro->Nombre = $request->Nombre;
+                $parametro->Descripcion = $request->Descripcion;
                 $parametro->save();
 
                 $mensaje = [
                     'Respuesta del Servidor' => "200 OK",
                     'Mensaje' => "Se actualizaron los datos correctamente",
                     'ID' => $parametro->IdParametroServidor,
+                    'IdServidor' => $parametro->IdServidor,
                     'Nombre' => $parametro->Nombre,
                     'Descripcion' => $parametro->Descripcion
                 ];

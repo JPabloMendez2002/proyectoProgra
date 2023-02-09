@@ -15,9 +15,12 @@ return new class extends Migration
     {
         Schema::create('Parametros_Servicios', function (Blueprint $table) {
             $table->id('IdParametroServicio');
-            $table->string('Nombre',20)->unique();;
+            $table->unsignedBigInteger('IdServicio');
+            $table->string('Nombre',20)->unique();
             $table->text('Descripcion');
             $table->timestamps();
+
+            $table->foreign('IdServicio')->references('IdServicio')->on('Servicios');
         });
     }
 

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Parametros_Servicios;
+use App\Models\Servidor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ParametrosServiciosController extends Controller
+class ServidorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,18 +15,20 @@ class ParametrosServiciosController extends Controller
      */
     public function index()
     {
-        $parametrosServicios = Parametros_Servicios::all();
+        $servidores = Servidor::all();
         $datos = [];
 
-        foreach ($parametrosServicios as $parametroServicio) {
+        foreach ($servidores as $servidor) {
             $datos[] = [
-                'ID' => $parametroServicio->IdParametroServicio,
-                'Nombre' => $parametroServicio->Nombre,
-                'Descripcion' => $parametroServicio->Descripcion
+                'ID' => $servidor->IdServidor,
+                'Nombre' => $servidor->Nombre,
+                'Descripcion' => $servidor->Descripcion,
+                'Contrasena' => $servidor->Contrasena,
+                'Notificaciones' => $servidor->Notificaciones
             ];
         }
 
-        if (!empty($parametroServicio)) {
+        if (!empty($servidores)) {
             return response()->json($datos);
         } else {
             $mensaje = [
@@ -56,11 +58,13 @@ class ParametrosServiciosController extends Controller
     public function store(Request $request)
     {
         try {
-            $parametro = new Parametros_Servicios();
+            $servidor = new Servidor();
 
             $reglas = [
                 'Nombre' => 'required|string',
                 'Descripcion' => 'required|string',
+                'Contrasena' => 'required|string',
+                'Notificaciones' => 'required|integer'
             ];
 
             $validator = Validator::make($request->all(), $reglas);
@@ -73,15 +77,16 @@ class ParametrosServiciosController extends Controller
 
                 return response()->json($mensaje);
             } else {
-
-                $parametro->Nombre = $request->Nombre;
-                $parametro->Descripcion = $request->Descripcion;
-                $parametro->save();
+                $servidor->Nombre = $request->Nombre;
+                $servidor->Descripcion = $request->Descripcion;
+                $servidor->Contrasena = sha1($request->Contrasena);
+                $servidor->Notificaciones = $request->Notificaciones;
+                $servidor->save();
 
                 $mensaje = [
                     'Respuesta del Servidor' => "201 Created",
-                    'Mensaje' => "Parametro agregado correctamente",
-                    'Datos' => $parametro
+                    'Mensaje' => "Rol agregado correctamente",
+                    'Datos' => $servidor
                 ];
 
                 return response()->json($mensaje);
@@ -89,7 +94,7 @@ class ParametrosServiciosController extends Controller
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 409 Conflict",
-                'Mensaje' => "El parametro '{$request->Nombre}' ya se encuentra registrado"
+                'Mensaje' => "El servidor '{$request->Nombre}' ya se encuentra registrado"
             ];
 
             return response()->json($mensaje);
@@ -99,26 +104,28 @@ class ParametrosServiciosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Parametros_Servicios  $parametros_Servicios
+     * @param  \App\Models\Servidor  $servidor
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
     {
-        $parametro = Parametros_Servicios::find($request->IdParametroServicio);
+        $servidor = Servidor::find($request->IdServidor);
 
-        if (!empty($parametro)) {
+        if (!empty($servidor)) {
             $mensaje = [
                 'Respuesta del Servidor' => "200 OK",
-                'ID' => $parametro->IdParametroServicio,
-                'Nombre' => $parametro->Nombre,
-                'Descripcion' => $parametro->Descripcion
+                'ID' => $servidor->IdServidor,
+                'Nombre' => $servidor->Nombre,
+                'Descripcion' => $servidor->Descripcion,
+                'Contrasena' => $servidor->Contrasena,
+                'Notificaciones' => $servidor->Notificaciones
             ];
 
             return response()->json($mensaje);
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServicio}"
+                'Mensaje' => "No se encontro el rol con ID: {$request->IdServidor}"
             ];
 
             return response()->json($mensaje);
@@ -128,10 +135,10 @@ class ParametrosServiciosController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Parametros_Servicios  $parametros_Servicios
+     * @param  \App\Models\Servidor  $servidor
      * @return \Illuminate\Http\Response
      */
-    public function edit(Parametros_Servicios $parametros_Servicios)
+    public function edit(Servidor $servidor)
     {
         //
     }
@@ -140,13 +147,13 @@ class ParametrosServiciosController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Parametros_Servicios  $parametros_Servicios
+     * @param  \App\Models\Servidor  $servidor
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
         try {
-            $parametro = Parametros_Servicios::find($request->IdParametroServicio);
+            $servidor = Servidor::find($request->IdServidor);
 
             $reglas = [
                 'Nombre' => 'required|string',
@@ -163,16 +170,21 @@ class ParametrosServiciosController extends Controller
 
                 return response()->json($mensaje);
             } else {
-                $parametro->Nombre = $request->Nombre;
-                $parametro->Descripcion = $request->Descripcion;
-                $parametro->save();
+                $servidor->Nombre = $request->Nombre;
+                $servidor->Descripcion = $request->Descripcion;
+                $servidor->Contrasena = $request->Contrasena;
+                $servidor->Notificaciones = $request->Notificaciones;
+                $servidor->save();
 
                 $mensaje = [
                     'Respuesta del Servidor' => "200 OK",
                     'Mensaje' => "Se actualizaron los datos correctamente",
-                    'ID' => $parametro->IdParametroServicio,
-                    'Nombre' => $parametro->Nombre,
-                    'Descripcion' => $parametro->Descripcion
+                    'ID' => $servidor->IdServidor,
+                    'Nombre' => $servidor->Nombre,
+                    'Descripcion' => $servidor->Descripcion,
+                    'Contrasena' => $servidor->Contrasena,
+                    'Notificaciones' => $servidor->Notificaciones
+
                 ];
 
                 return response()->json($mensaje);
@@ -180,7 +192,7 @@ class ParametrosServiciosController extends Controller
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServicio}"
+                'Mensaje' => "No se encontro el rol con ID: {$request->IdServidor}"
             ];
 
             return response()->json($mensaje);
@@ -190,24 +202,24 @@ class ParametrosServiciosController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Parametros_Servicios  $parametros_Servicios
+     * @param  \App\Models\Servidor  $servidor
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
     {
-        $parametro = Parametros_Servicios::destroy($request->IdParametroServicio);
+        $servidor = Servidor::destroy($request->IdServidor);
 
-        if ($parametro) {
+        if ($servidor) {
             $mensaje = [
                 'Respuesta del Servidor' => "200 OK",
-                'Mensaje' => "Se elimino el parametro con ID: {$request->IdParametroServicio}"
+                'Mensaje' => "Se elimino el rol con ID: {$request->IdServidor}"
             ];
 
             return response()->json($mensaje);
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServicio}"
+                'Mensaje' => "No se encontro el rol con ID: {$request->IdServidor}"
             ];
 
             return response()->json($mensaje);
