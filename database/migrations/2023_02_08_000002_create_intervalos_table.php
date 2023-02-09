@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('Intervalos', function (Blueprint $table) {
             $table->id('IdIntervalo');
-            $table->string('IdIntervalo', 20)->unique();
+            $table->string('Nombre', 20)->unique();
             $table->text('Descripcion');
             $table->timestamps();
         });
