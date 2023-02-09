@@ -20,6 +20,7 @@ class RolController extends Controller
         foreach ($roles as $rol) {
             $datos[] = [
                 'ID' => $rol->IdRol,
+                'Nombre' => $rol->Nombre,
                 'Descripcion' => $rol->Descripcion
             ];
         }
@@ -45,17 +46,29 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        $rol = new Rol();
-        $rol->Descripcion = $request->Descripcion;
-        $rol->save();
 
-        $mensaje = [
-            'Respuesta del Servidor' => "201 Created",
-            'Mensaje' => "Rol agregado correctamente",
-            'Datos' => $rol
-        ];
+        try {
+            $rol = new Rol();
 
-        return response()->json($mensaje);
+            $rol->Nombre = $request->Nombre;
+            $rol->Descripcion = $request->Descripcion;
+            $rol->save();
+
+            $mensaje = [
+                'Respuesta del Servidor' => "201 Created",
+                'Mensaje' => "Rol agregado correctamente",
+                'Datos' => $rol
+            ];
+
+            return response()->json($mensaje);
+        } catch (\Throwable $th) {
+            $mensaje = [
+                'Respuesta del Servidor' => "Error 409 Conflict",
+                'Mensaje' => "El rol '{$request->Nombre}' ya se encuentra registrado"
+            ];
+
+            return response()->json($mensaje);
+        }
     }
 
     /**
@@ -72,7 +85,7 @@ class RolController extends Controller
             return response()->json($rol);
         } else {
             $mensaje = [
-                'Respuesta del Servidor' => "Error 404",
+                'Respuesta del Servidor' => "Error 404 Not Found",
                 'Mensaje' => "No se encontro el rol con ID: {$request->IdRol}"
             ];
 
@@ -104,7 +117,7 @@ class RolController extends Controller
         $rol = Rol::find($request->IdRol);
 
         if (!empty($rol)) {
-            if($request->Descripcion!=""){
+            if ($request->Descripcion != "") {
                 $rol->descripcion = $request->Descripcion;
                 $rol->save();
 
@@ -116,24 +129,22 @@ class RolController extends Controller
                 ];
 
                 return response()->json($mensaje);
-            }else{
+            } else {
                 $mensaje = [
-                    'Respuesta del Servidor' => "Error",
+                    'Respuesta del Servidor' => "Error 500",
                     'Mensaje' => "No se permiten descripciones vacias"
                 ];
 
                 return response()->json($mensaje);
             }
-
         } else {
             $mensaje = [
-                'Respuesta del Servidor' => "Error 404",
+                'Respuesta del Servidor' => "Error 404 Not Found",
                 'Mensaje' => "No se encontro el rol con ID: {$request->IdRol}"
             ];
 
             return response()->json($mensaje);
         }
-
     }
 
     /**
@@ -156,7 +167,7 @@ class RolController extends Controller
             return response()->json($mensaje);
         } else {
             $mensaje = [
-                'Respuesta del Servidor' => "Error 404",
+                'Respuesta del Servidor' => "Error 404 Not Found",
                 'Mensaje' => "No se encontro el rol con ID: {$request->IdRol}"
             ];
 

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
+     * Reset AutoIncrement SQL: DBCC CHECKIDENT('table', RESEED, 0)
      * @return void
      */
     public function up()
