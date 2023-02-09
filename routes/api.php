@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\EmailsController;
-use App\Http\Controllers\EnviosCorreoController;
 use App\Http\Controllers\IntervaloController;
 use App\Http\Controllers\ParametrosServidoresController;
 use Illuminate\Http\Request;
@@ -38,3 +37,14 @@ Route::resource('intervalos', IntervaloController::class)->parameters(['interval
 Route::resource('parametrosservicios', ParametrosServiciosController::class)->parameters(['parametrosservicios'=>'IdParametroServicio']);
 
 Route::resource('parametrosservidores', ParametrosServidoresController::class)->parameters(['parametrosservidores'=>'IdParametroServidor']);
+
+Route::resource('servidores', ServidorController::class)->parameters(['servidores'=>'IdServidor']);
+
+Route::resource('servicios', ServicioController::class)->parameters(['servicios'=>'IdServicio']);
+
+Route::get('monitoreoservidores', [MonitoreoServidorController::class, 'index']);
+
+Route::get('monitoreoservicios', [MonitoreoServicioController::class, 'index']);
+
+Route::post("enviar", [EmailsController::class, "enviarEmails"])->name("enviar");
+
