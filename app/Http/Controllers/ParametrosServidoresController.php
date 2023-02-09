@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Parametros_Servidores;
 use Illuminate\Http\Request;
-use App\Models\Rol;
 
-class RolController extends Controller
+class ParametrosServidoresController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,14 +14,14 @@ class RolController extends Controller
      */
     public function index()
     {
-        $roles = Rol::all();
+        $parametrosServidores = Parametros_Servidores::all();
 
         $datos = [];
-        foreach ($roles as $rol) {
+        foreach ($parametrosServidores as $parametroServidor) {
             $datos[] = [
-                'ID' => $rol->IdRol,
-                'Nombre' => $rol->Nombre,
-                'Descripcion' => $rol->Descripcion
+                'ID' => $parametroServidor->IdParametroServidor,
+                'Nombre' => $parametroServidor->Nombre,
+                'Descripcion' => $parametroServidor->Descripcion
             ];
         }
 
@@ -47,23 +47,23 @@ class RolController extends Controller
     public function store(Request $request)
     {
         try {
-            $rol = new Rol();
+            $parametro = new Parametros_Servidores();
 
-            $rol->Nombre = $request->Nombre;
-            $rol->Descripcion = $request->Descripcion;
-            $rol->save();
+            $parametro->Nombre = $request->Nombre;
+            $parametro->Descripcion = $request->Descripcion;
+            $parametro->save();
 
             $mensaje = [
                 'Respuesta del Servidor' => "201 Created",
-                'Mensaje' => "Rol agregado correctamente",
-                'Datos' => $rol
+                'Mensaje' => "Parametro agregado correctamente",
+                'Datos' => $parametro
             ];
 
             return response()->json($mensaje);
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 409 Conflict",
-                'Mensaje' => "El rol '{$request->Nombre}' ya se encuentra registrado"
+                'Mensaje' => "El parametro '{$request->Nombre}' ya se encuentra registrado"
             ];
 
             return response()->json($mensaje);
@@ -73,19 +73,19 @@ class RolController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Parametros_Servidores  $parametros_Servidores
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
     {
-        $rol = Rol::find($request->IdRol);
+        $parametro = Parametros_Servidores::find($request->IdParametroServidor);
 
-        if (!empty($rol)) {
-            return response()->json($rol);
+        if (!empty($parametro)) {
+            return response()->json($parametro);
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdRol}"
+                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServidor}"
             ];
 
             return response()->json($mensaje);
@@ -95,10 +95,10 @@ class RolController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Parametros_Servidores  $parametros_Servidores
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Parametros_Servidores $parametros_Servidores)
     {
         //
     }
@@ -107,24 +107,23 @@ class RolController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Parametros_Servidores  $parametros_Servidores
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
+        $parametro = Parametros_Servidores::find($request->IdParametroServidor);
 
-        $rol = Rol::find($request->IdRol);
-
-        if (!empty($rol)) {
+        if (!empty($parametro)) {
             if ($request->Descripcion != "") {
-                $rol->descripcion = $request->Descripcion;
-                $rol->save();
+                $parametro->descripcion = $request->Descripcion;
+                $parametro->save();
 
                 $mensaje = [
                     'Respuesta del Servidor' => "200 OK",
                     'Mensaje' => "Se actualizaron los datos correctamente",
-                    'ID' => $rol->IdRol,
-                    'Descripcion' => $rol->descripcion
+                    'ID' => $parametro->IdParametroServidor,
+                    'Descripcion' => $parametro->descripcion
                 ];
 
                 return response()->json($mensaje);
@@ -139,7 +138,7 @@ class RolController extends Controller
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdRol}"
+                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServidor}"
             ];
 
             return response()->json($mensaje);
@@ -149,24 +148,24 @@ class RolController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Parametros_Servidores  $parametros_Servidores
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
     {
-        $rol = Rol::destroy($request->IdRol);
+        $parametro = Parametros_Servidores::destroy($request->IdParametroServidor);
 
-        if ($rol) {
+        if ($parametro) {
             $mensaje = [
                 'Respuesta del Servidor' => "200 OK",
-                'Mensaje' => "Se elimino el rol con ID: {$request->IdRol}"
+                'Mensaje' => "Se elimino el parametro con ID: {$request->IdParametroServidor}"
             ];
 
             return response()->json($mensaje);
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdRol}"
+                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServidor}"
             ];
 
             return response()->json($mensaje);

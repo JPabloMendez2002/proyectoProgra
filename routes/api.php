@@ -4,6 +4,7 @@ use App\Http\Controllers\IntervaloController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\ParametrosServiciosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('roles', RolController::class)->parameters(['roles'=>'IdRol']);
 
 Route::resource('intervalos', IntervaloController::class)->parameters(['intervalos' => 'IdIntervalo']);
+
+Route::resource('parametrosservicios', ParametrosServiciosController::class)->parameters(['parametrosservicios'=>'IdParametroServicio']);
+
+Route::resource('parametrosservidores', ParametrosServiciosController::class)->parameters(['parametrosservidores'=>'IdParametroServidor']);

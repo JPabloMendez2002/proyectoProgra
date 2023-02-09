@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Rol extends Model
+class Parametros_Servidores extends Model
 {
     use HasFactory;
 
-    protected $table = 'Roles';
-    protected $primaryKey = 'IdRol';
+    protected $table = 'Parametros_Servidores';
+    protected $primaryKey = 'IdParametroServidor';
     protected $fillable = ['Nombre','Descripcion'];
 }
