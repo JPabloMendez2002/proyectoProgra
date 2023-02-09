@@ -19,11 +19,9 @@ return new class extends Migration
             $table->text('Descripcion');
             $table->unsignedBigInteger('IdServidor');
             $table->integer('TimeoutRespuesta');
-            $table->unsignedBigInteger('IdParametroServicio');
             $table->integer('EstadoServicio');
 
             $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');
-            $table->foreign('IdParametroServicio')->references('IdParametroServicio')->on('Parametros_Servicios');
 
             $table->timestamps();
         });

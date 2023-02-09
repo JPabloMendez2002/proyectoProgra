@@ -7,6 +7,10 @@ use App\Models\Intervalo;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AlertasMailable;
+
 class IntervaloController extends Controller
 {
     /**
@@ -183,7 +187,7 @@ class IntervaloController extends Controller
                 'Respuesta del Servidor' => "Error 404 Not Found",
                 'Mensaje' => "No se encontro el intervalo con ID: {$request->IdIntervalo}"
             ];
-            
+
             return response()->json($mensaje);
         }
     }

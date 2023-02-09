@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('Monitoreo_Servidor', function (Blueprint $table) {
-            $table->id('IdMonitoreoServicio');
+            $table->id('IdMonitoreoServidor');
             $table->unsignedBigInteger('IdServidor');
             $table->integer('UsoCpu');
             $table->integer('UsoMemoria');

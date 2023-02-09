@@ -18,11 +18,7 @@ return new class extends Migration
             $table->string('Nombre',20);
             $table->text('Descripcion');
             $table->string('Contrasena',100);
-            $table->unsignedBigInteger('IdParametroServidor');
             $table->integer('Notificaciones');
-
-            $table->foreign('IdParametroServidor')->references('IdParametroServidor')->on('Parametros_Servidores');
-
             $table->timestamps();
         });
     }
