@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Rol;
-
+use Illuminate\Support\Facades\Validator;
 class RolController extends Controller
 {
     /**
@@ -25,7 +25,14 @@ class RolController extends Controller
             ];
         }
 
-        return response()->json($datos);
+        if(!empty($rol)){
+            return response()->json($datos);
+        }else{
+            $mensaje = [
+                'Mensaje' => "No hay datos por mostrar",
+            ];
+            return response()->json($mensaje);
+        }
     }
 
     /**
@@ -48,24 +55,38 @@ class RolController extends Controller
     {
         try {
             $rol = new Rol();
-
-            $rol->Nombre = $request->Nombre;
-            $rol->Descripcion = $request->Descripcion;
-            $rol->save();
-
-            $mensaje = [
-                'Respuesta del Servidor' => "201 Created",
-                'Mensaje' => "Rol agregado correctamente",
-                'Datos' => $rol
+            $reglas = [
+                'Nombre'=>'required|string',
+                'Descripcion'=>'required|string',
             ];
 
-            return response()->json($mensaje);
+            $validator = Validator::make($request->all(), $reglas);
+            if($validator->fails()){
+                $mensaje = [
+                    'Respuesta del Servidor' => "Error 404 Not Found",
+                    'Mensaje' => "No pueden existir campos vacíos",
+                    'Error' => $validator->errors()->all()
+                ];
+                return response()->json($mensaje);
+            }else{
+                $rol->Nombre = $request->Nombre;
+                $rol->Descripcion = $request->Descripcion;
+                $rol->save();
+    
+                $mensaje = [
+                    'Respuesta del Servidor' => "201 Created",
+                    'Mensaje' => "Rol agregado correctamente",
+                    'Datos' => $rol
+                ];
+    
+                return response()->json($mensaje);
+            }
+   
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 409 Conflict",
                 'Mensaje' => "El rol '{$request->Nombre}' ya se encuentra registrado"
             ];
-
             return response()->json($mensaje);
         }
     }
@@ -81,7 +102,13 @@ class RolController extends Controller
         $rol = Rol::find($request->IdRol);
 
         if (!empty($rol)) {
-            return response()->json($rol);
+            $mensaje = [
+                'Respuesta del Servidor' => "200 OK",
+                'ID' => $rol->IdRol,
+                'Nombre' => $rol->Nombre,
+                'Descripcion' => $rol->Descripcion
+            ];
+            return response()->json($mensaje);
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
@@ -112,31 +139,39 @@ class RolController extends Controller
      */
     public function update(Request $request)
     {
+        try {
+            $rol = Rol::find($request->IdRol);
 
-        $rol = Rol::find($request->IdRol);
-
-        if (!empty($rol)) {
-            if ($request->Descripcion != "") {
-                $rol->descripcion = $request->Descripcion;
+            $reglas = [
+                'Nombre'=>'required|string',
+                'Descripcion'=>'required|string',
+            ];
+            $validator = Validator::make($request->all(), $reglas);
+            if ($validator->fails()) {
+                $mensaje = [
+                    'Respuesta del Servidor' => "Error 404 Not Found",
+                    'Mensaje' => "No pueden existir campos vacíos",
+                    'Error' => $validator->errors()->all()
+                ];
+                return response()->json($mensaje);
+            }else{
+                $rol->Descripcion = $request->Descripcion;
+                $rol->Nombre = $request->Nombre;
                 $rol->save();
 
                 $mensaje = [
                     'Respuesta del Servidor' => "200 OK",
                     'Mensaje' => "Se actualizaron los datos correctamente",
                     'ID' => $rol->IdRol,
-                    'Descripcion' => $rol->descripcion
-                ];
-
-                return response()->json($mensaje);
-            } else {
-                $mensaje = [
-                    'Respuesta del Servidor' => "Error 500",
-                    'Mensaje' => "No se permiten nombres ni descripciones vacias"
+                    'Nombre' => $rol->Nombre,
+                    'Descripcion' => $rol->Descripcion
+                    
                 ];
 
                 return response()->json($mensaje);
             }
-        } else {
+        
+        } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
                 'Mensaje' => "No se encontro el rol con ID: {$request->IdRol}"

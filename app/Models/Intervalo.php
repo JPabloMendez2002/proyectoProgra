@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Intervalo extends Model
 {
     use HasFactory;
+    
+    protected $table = 'Intervalos';
+    protected $primaryKey = 'IdIntervalo';
+
+    protected $fillable = ['Nombre','Descripcion'];
 }

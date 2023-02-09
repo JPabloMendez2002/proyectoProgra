@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\IntervaloController;
+use App\Http\Controllers\ParametrosServidoresController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolController;
@@ -27,4 +28,4 @@ Route::resource('intervalos', IntervaloController::class)->parameters(['interval
 
 Route::resource('parametrosservicios', ParametrosServiciosController::class)->parameters(['parametrosservicios'=>'IdParametroServicio']);
 
-Route::resource('parametrosservidores', ParametrosServiciosController::class)->parameters(['parametrosservidores'=>'IdParametroServidor']);
+Route::resource('parametrosservidores', ParametrosServidoresController::class)->parameters(['parametrosservidores'=>'IdParametroServidor']);

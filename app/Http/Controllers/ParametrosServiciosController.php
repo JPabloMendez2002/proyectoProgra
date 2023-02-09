@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Parametros_Servicios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ParametrosServiciosController extends Controller
 {
@@ -25,7 +26,15 @@ class ParametrosServiciosController extends Controller
             ];
         }
 
-        return response()->json($datos);
+        if(!empty($parametroServicio)){
+            return response()->json($datos);
+        }else{
+            $mensaje = [
+                'Mensaje' => "No hay datos por mostrar",
+            ];
+            return response()->json($mensaje);
+        }
+
     }
 
     /**
@@ -49,17 +58,33 @@ class ParametrosServiciosController extends Controller
         try {
             $parametro = new Parametros_Servicios();
 
-            $parametro->Nombre = $request->Nombre;
-            $parametro->Descripcion = $request->Descripcion;
-            $parametro->save();
-
-            $mensaje = [
-                'Respuesta del Servidor' => "201 Created",
-                'Mensaje' => "Parametro agregado correctamente",
-                'Datos' => $parametro
+            $reglas = [
+                'Nombre'=>'required|string',
+                'Descripcion'=>'required|string',
             ];
 
-            return response()->json($mensaje);
+            $validator = Validator::make($request->all(), $reglas);
+            if ($validator->fails()) {
+                $mensaje = [
+                    'Respuesta del Servidor' => "Error 404 Not Found",
+                    'Mensaje' => "No pueden existir campos vacíos",
+                    'Error' => $validator->errors()->all()
+                ];
+                return response()->json($mensaje);
+            }else{
+
+                $parametro->Nombre = $request->Nombre;
+                $parametro->Descripcion = $request->Descripcion;
+                $parametro->save();
+    
+                $mensaje = [
+                    'Respuesta del Servidor' => "201 Created",
+                    'Mensaje' => "Parametro agregado correctamente",
+                    'Datos' => $parametro
+                ];
+                return response()->json($mensaje);
+            }
+
         } catch (\Throwable $th) {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 409 Conflict",
@@ -81,7 +106,13 @@ class ParametrosServiciosController extends Controller
         $parametro = Parametros_Servicios::find($request->IdParametroServicio);
 
         if (!empty($parametro)) {
-            return response()->json($parametro);
+            $mensaje = [
+                'Respuesta del Servidor' => "200 OK",
+                'ID' => $parametro->IdParametroServicio,
+                'Nombre' => $parametro->Nombre,
+                'Descripcion' => $parametro->Descripcion
+            ];
+            return response()->json($mensaje);
         } else {
             $mensaje = [
                 'Respuesta del Servidor' => "Error 404 Not Found",
@@ -112,35 +143,44 @@ class ParametrosServiciosController extends Controller
      */
     public function update(Request $request)
     {
-        $parametro = Parametros_Servicios::find($request->IdParametroServicio);
+       
+        try {
 
-        if (!empty($parametro)) {
-            if ($request->Descripcion != "") {
-                $parametro->descripcion = $request->Descripcion;
+            $parametro = Parametros_Servicios::find($request->IdParametroServicio);
+            $reglas = [
+                'Nombre'=>'required|string',
+                'Descripcion'=>'required|string',
+            ];
+
+            $validator = Validator::make($request->all(), $reglas);
+            if ($validator->fails()) {
+                $mensaje = [
+                    'Respuesta del Servidor' => "Error 404 Not Found",
+                    'Mensaje' => "No pueden existir campos vacíos",
+                    'Error' => $validator->errors()->all()
+                ];
+                return response()->json($mensaje);
+            }else{
+                $parametro->Nombre = $request->Nombre;
+                $parametro->Descripcion = $request->Descripcion;
                 $parametro->save();
 
                 $mensaje = [
                     'Respuesta del Servidor' => "200 OK",
                     'Mensaje' => "Se actualizaron los datos correctamente",
                     'ID' => $parametro->IdParametroServicio,
-                    'Descripcion' => $parametro->descripcion
-                ];
-
-                return response()->json($mensaje);
-            } else {
-                $mensaje = [
-                    'Respuesta del Servidor' => "Error 500",
-                    'Mensaje' => "No se permiten nombres ni descripciones vacias"
+                    'Nombre' => $parametro->Nombre,
+                    'Descripcion' => $parametro->Descripcion
                 ];
 
                 return response()->json($mensaje);
             }
-        } else {
-            $mensaje = [
-                'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServicio}"
-            ];
 
+        } catch (\Throwable $th) {
+                $mensaje = [
+                    'Respuesta del Servidor' => "Error 404 Not Found",
+                    'Mensaje' => "No se encontro el parametro con ID: {$request->IdParametroServicio}"
+                ];
             return response()->json($mensaje);
         }
     }
