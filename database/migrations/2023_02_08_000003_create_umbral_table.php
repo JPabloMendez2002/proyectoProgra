@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Parametros_Servidores', function (Blueprint $table) {
-            $table->id('IdParametroServidor');
-            $table->unsignedBigInteger('IdServidor');
-            $table->string('Nombre',20)->unique();
-            $table->text('Descripcion');
-            $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');
-
+        Schema::create('Umbral', function (Blueprint $table) {
+            $table->id('IdUmbral');
+            $table->string('Nombre', 20)->unique();
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Parametros_Servidores');
+        Schema::dropIfExists('Umbral');
     }
 };

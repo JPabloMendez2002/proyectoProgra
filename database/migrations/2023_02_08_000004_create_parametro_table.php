@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Intervalos', function (Blueprint $table) {
-            $table->id('IdIntervalo');
-            $table->string('Nombre', 20)->unique();
-            $table->text('Descripcion');
+        Schema::create('Parametro', function (Blueprint $table) {
+            $table->id('IdParametro');
+            $table->string('Nombre',20)->unique();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Intervalos');
+        Schema::dropIfExists('Parametro');
     }
 };

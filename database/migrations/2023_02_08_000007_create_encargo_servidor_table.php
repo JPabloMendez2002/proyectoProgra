@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Redimientos', function (Blueprint $table) {
+        Schema::create('Encargo_Servidor', function (Blueprint $table) {
+            $table->unsignedBigInteger('IdEncargado');
             $table->unsignedBigInteger('IdServidor');
-            $table->integer('UsoCpu');
-            $table->integer('UsoMemoria');
-            $table->integer('UsoDisco');
-            $table->unsignedBigInteger('IdIntervalo');
-
-            $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');
-            $table->foreign('IdIntervalo')->references('IdIntervalo')->on('Intervalos');
-
+            $table->boolean('Alertas');
             $table->timestamps();
+
+            $table->foreign('IdEncargado')->references('IdUsuario')->on('Usuarios');
+            $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');
         });
     }
 
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Redimientos');
+        Schema::dropIfExists('Encargo_Servidor');
     }
 };

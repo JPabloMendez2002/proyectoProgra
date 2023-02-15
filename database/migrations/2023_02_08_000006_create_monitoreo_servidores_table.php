@@ -13,16 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Monitoreo_Servicio', function (Blueprint $table) {
-            $table->id('IdMonitoreoServicio');
-            $table->unsignedBigInteger('IdServicio');
+        Schema::create('Monitoreo_Servidor', function (Blueprint $table) {
+            $table->id('IdMonitoreo');
+            $table->unsignedBigInteger('IdServidor');
+            $table->date('FechaMonitoreo');
             $table->integer('UsoCpu');
             $table->integer('UsoMemoria');
             $table->integer('UsoDisco');
-            $table->date('FechaMonitoreo');
             $table->timestamps();
 
-            $table->foreign('IdServicio')->references('IdServicio')->on('Servicios');
+            $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');
         });
     }
 
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Monitoreo_Servicio');
+        Schema::dropIfExists('Monitoreo_Servidor');
     }
 };

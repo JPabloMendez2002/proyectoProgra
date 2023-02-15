@@ -31,11 +31,12 @@ class ServidorController extends Controller
         if (!empty($servidores)) {
             return response()->json($datos);
         } else {
-            $mensaje = [
-                'Mensaje' => "No hay datos por mostrar",
-            ];
+            // $mensaje = [
+            //     'Mensaje' => "No hay datos por mostrar",
+            // ];
 
-            return response()->json($mensaje);
+
+            //return response()->json($mensaje);
         }
     }
 
@@ -123,12 +124,7 @@ class ServidorController extends Controller
 
             return response()->json($mensaje);
         } else {
-            $mensaje = [
-                'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdServidor}"
-            ];
-
-            return response()->json($mensaje);
+            abort(code:404, message:"No se encontro el servidor con ID: {$request->IdServidor}");
         }
     }
 

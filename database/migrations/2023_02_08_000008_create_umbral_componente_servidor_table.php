@@ -13,17 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Servicios', function (Blueprint $table) {
-            $table->id('IdServicio');
-            $table->string('Nombre',20);
-            $table->text('Descripcion');
+        Schema::create('Umbral_Componente_Servidor', function (Blueprint $table) {
             $table->unsignedBigInteger('IdServidor');
-            $table->integer('TimeoutRespuesta');
-            $table->integer('EstadoServicio');
+            $table->unsignedBigInteger('IdComponente');
+            $table->unsignedBigInteger('IdUmbral');
+            $table->integer('Porcentaje');
+            $table->timestamps();
 
             $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');
-
-            $table->timestamps();
+            $table->foreign('IdComponente')->references('IdComponente')->on('Componente');
+            $table->foreign('IdUmbral')->references('IdUmbral')->on('Umbral');
         });
     }
 
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Servicios');
+        Schema::dropIfExists('Umbral_Componente_Servidor');
     }
 };

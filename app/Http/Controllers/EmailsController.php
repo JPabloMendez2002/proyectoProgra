@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use PHPMailer\PHPMailer\PHPMailer; 
+use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
 use Illuminate\Support\Facades\Validator;
-
 
 class EmailsController extends Controller
 {
@@ -30,17 +28,17 @@ class EmailsController extends Controller
                 'Error' => $validator->errors()->all()
             ];
             return response()->json($mensaje);
-            
+
         }else{
             try {
                 $mail = new PHPMailer();
-                $mail->IsSMTP(); 
-                $mail->SMTPAuth = true;                
-                $mail->SMTPSecure = "TLS";              
-                $mail->Host = "smtp.titan.email";       
-                $mail->Port = 587;                     
-                $mail->Username = "prograv@spestechnical.com";  
-                $mail->Password = 'curso2023.';    
+                $mail->IsSMTP();
+                $mail->SMTPAuth = true;
+                $mail->SMTPSecure = "TLS";
+                $mail->Host = "smtp.titan.email";
+                $mail->Port = 587;
+                $mail->Username = "prograv@spestechnical.com";
+                $mail->Password = 'curso2023.';
                 $mail->CharSet = 'UTF-8';
                 $mail->SetFrom('prograv@spestechnical.com', 'GRUPO SPES');
                 $mail->addAddress($request->destinatario1);
@@ -53,7 +51,7 @@ class EmailsController extends Controller
                 <h4><strong>Mensaje: </strong></h4>
                 <h4>" . $request->mensaje . "</h4>";
                 $mail->send();
-    
+
             } catch (Exception $e) {
                  return back()->with('Error','Error al enviar los E-Mails.');
             }
@@ -65,6 +63,6 @@ class EmailsController extends Controller
 
         return response()->json($mensaje);
         }
-        
+
     }
 }

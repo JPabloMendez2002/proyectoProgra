@@ -8,16 +8,14 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     * Reset AutoIncrement SQL: DBCC CHECKIDENT('table', RESEED, 0)
+     *
      * @return void
      */
     public function up()
     {
-        Schema::create('Usuarios', function (Blueprint $table) {
-            $table->id('IdUsuario');
-            $table->string('Nombre',20);
-            $table->string('Contrasena',100);
-            $table->string('Correo',30);
+        Schema::create('Componente', function (Blueprint $table) {
+            $table->id('IdComponente');
+            $table->string('Nombre',20)->unique();
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Usuarios');
+        Schema::dropIfExists('Componente');
     }
 };
