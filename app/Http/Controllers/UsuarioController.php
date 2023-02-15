@@ -26,7 +26,7 @@ class UsuarioController extends Controller
 
             return response()->json($mensaje);
         } else {
-            $usuario = Usuario::where('Usuario', $request->Usuario)->first();
+            $usuario = Usuario::where('Nombre', $request->Usuario)->first();
 
             if ($usuario) {
                 if (sha1($request->Contrasena) == $usuario->Contrasena) {
@@ -44,11 +44,7 @@ class UsuarioController extends Controller
                     return response()->json($mensaje);
                 }
             } else {
-                $mensaje = [
-                    'Mensaje' => "No existe este usuario"
-                ];
-
-                return response()->json($mensaje);
+                abort(code:404,message:"No existe este usuario");
             }
         }
     }

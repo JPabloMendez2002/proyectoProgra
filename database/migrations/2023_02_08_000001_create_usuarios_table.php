@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id('IdUsuario');
             $table->string('Nombre',20);
             $table->string('Contrasena',100);
+            $table->string('NombreCompleto',50);
             $table->string('Correo',30);
             $table->timestamps();
         });
