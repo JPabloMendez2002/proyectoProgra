@@ -16,7 +16,7 @@ class DashController extends Controller
     {
         $servicios = Servicio::all();
 
-        $monitoreos = Servidor::join('Monitoreo_Servidor', 'Monitoreo_Servidor.IdServidor', '=', 'Servidores.IdServidor')->select('Monitoreo_Servidor.IdMonitoreo', 'Monitoreo_Servidor.FechaMonitoreo', 'Servidores.IdServidor AS ID Servidor', 'Servidores.Nombre AS Nombre Servidor', 'Monitoreo_Servidor.UsoCpu', 'Monitoreo_Servidor.UsoMemoria', 'Monitoreo_Servidor.UsoDisco')->get();
+        $monitoreos = Servidor::join('Monitoreo_Servidor', 'Monitoreo_Servidor.IdServidor', '=', 'Servidores.IdServidor')->select('Monitoreo_Servidor.FechaMonitoreo', 'Servidores.IdServidor AS ID Servidor', 'Servidores.Nombre AS Nombre Servidor', 'Monitoreo_Servidor.UsoCpu', 'Monitoreo_Servidor.UsoMemoria', 'Monitoreo_Servidor.UsoDisco')->get();
 
         if (!empty($monitoreos)) {
 

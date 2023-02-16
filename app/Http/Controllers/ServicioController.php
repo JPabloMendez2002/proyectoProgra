@@ -140,50 +140,57 @@ class ServicioController extends Controller
      */
     public function update(Request $request)
     {
-        $servicio = Servicio::find($request->IdServicio);
 
-        if (!empty($servicio)) {
+        $reglas = [
+            'IdServidor' => 'required|integer',
+            'Nombre' => 'required|string',
+            'Descripcion' => 'required|string',
+            'TimeoutRespuesta' => 'required|integer',
+            'Tipo' => 'required|string'
+        ];
 
-            try {
-                $reglas = [
-                    'IdServidor' => 'required|integer',
-                    'Nombre' => 'required|string',
-                    'Descripcion' => 'required|string',
-                    'TimeoutRespuesta' => 'required|integer',
-                    'Tipo' => 'required|string'
-                ];
+        $validator = Validator::make($request->all(), $reglas);
 
-                $validator = Validator::make($request->all(), $reglas);
+        if ($validator->fails()) {
+            $errores =  implode(" ", $validator->errors()->all());
 
-                if ($validator->fails()) {
-                    $errores =  implode(" ", $validator->errors()->all());
-
-                    abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
-                } else {
-                    $servicio->IdServidor = $request->IdServidor;
-                    $servicio->Nombre = $request->Nombre;
-                    $servicio->Descripcion = $request->Descripcion;
-                    $servicio->TimeoutRespuesta = $request->TimeoutRespuesta;
-                    $servicio->Tipo = $request->Tipo;
-                    $servicio->save();
-
-                    $mensaje = [
-                        'Respuesta del Servidor' => "Se actualizaron los datos correctamente",
-                        'ID' => $servicio->IdServicio,
-                        'ID Servidor' => $servicio->IdServidor,
-                        'Nombre' => $servicio->Nombre,
-                        'Descripcion' => $servicio->Descripcion,
-                        'Timeout' => $servicio->TimeoutRespuesta,
-                        'Tipo' => $servicio->Tipo
-                    ];
-
-                    return response()->json($mensaje, 200);
-                }
-            } catch (\Throwable $th) {
-                abort(code: 409, message: "El servicio '{$request->Nombre}' ya se encuentra registrado");
-            }
+            abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
         } else {
-            abort(code: 404, message: "No se encontro el servicio con ID: {$request->IdServicio}");
+            $servicio = Servicio::find($request->IdServicio);
+
+            if (!empty($servicio)) {
+                $servidor = Servidor::find($request->IdServidor);
+
+                if (!empty($servidor)) {
+                    try {
+
+                        $servicio->IdServidor = $request->IdServidor;
+                        $servicio->Nombre = $request->Nombre;
+                        $servicio->Descripcion = $request->Descripcion;
+                        $servicio->TimeoutRespuesta = $request->TimeoutRespuesta;
+                        $servicio->Tipo = $request->Tipo;
+                        $servicio->save();
+
+                        $mensaje = [
+                            'Respuesta del Servidor' => "Se actualizaron los datos correctamente",
+                            'ID' => $servicio->IdServicio,
+                            'ID Servidor' => $servicio->IdServidor,
+                            'Nombre' => $servicio->Nombre,
+                            'Descripcion' => $servicio->Descripcion,
+                            'Timeout' => $servicio->TimeoutRespuesta,
+                            'Tipo' => $servicio->Tipo
+                        ];
+
+                        return response()->json($mensaje, 200);
+                    } catch (\Throwable $th) {
+                        abort(code: 409, message: "El servicio '{$request->Nombre}' ya se encuentra registrado");
+                    }
+                }else{
+                    abort(code: 404, message: "No se encontro el servidor con ID: {$request->IdServidor}");
+                }
+            } else {
+                abort(code: 404, message: "No se encontro el servicio con ID: {$request->IdServicio}");
+            }
         }
     }
 
