@@ -3,14 +3,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ParametrosServiciosController;
 use App\Http\Controllers\ServidorController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\MonitoreoServidorController;
-use App\Http\Controllers\MonitoreoServicioController;
 use App\Http\Controllers\EmailsController;
-use App\Http\Controllers\ParametrosServidoresController;
+use App\Http\Controllers\DashController;
+use App\Http\Controllers\MonitoreoServidorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,5 +33,8 @@ Route::resource('servidores', ServidorController::class)->parameters(['servidore
 
 Route::resource('servicios', ServicioController::class)->parameters(['servicios'=>'IdServicio']);
 
-Route::post("enviar", [EmailsController::class, "enviarEmails"])->name("enviar");
+Route::post('monitoreoservidor', [MonitoreoServidorController::class, 'store']);
 
+Route::post("alertaservidor", [EmailsController::class, "enviarEmailServidor"])->name("alertaservidor");
+
+Route::post("alertaservicio", [EmailsController::class, "enviarEmailServicio"])->name("alertaservicio");
