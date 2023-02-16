@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('Servidores', function (Blueprint $table) {
             $table->id('IdServidor');
-            $table->string('Nombre',20);
+            $table->string('Nombre',20)->unique();
             $table->text('Descripcion');
             $table->string('UsuarioAdministrador',20);
             $table->string('Contrasena',100);

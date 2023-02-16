@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('Servicios', function (Blueprint $table) {
             $table->id('IdServicio');
             $table->unsignedBigInteger('IdServidor');
-            $table->string('Nombre',20);
+            $table->string('Nombre',20)->unique();
             $table->text('Descripcion');
             $table->integer('TimeoutRespuesta');
-            $table->string('Tipo');
+            $table->string('Tipo',30);
 
             $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');
 

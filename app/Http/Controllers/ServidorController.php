@@ -23,20 +23,19 @@ class ServidorController extends Controller
                 'ID' => $servidor->IdServidor,
                 'Nombre' => $servidor->Nombre,
                 'Descripcion' => $servidor->Descripcion,
-                'Contrasena' => $servidor->Contrasena,
-                'Notificaciones' => $servidor->Notificaciones
+                'Usuario Administrador' => $servidor->UsuarioAdministrador,
+                'Contrasena' => $servidor->Contrasena
             ];
         }
 
-        if (!empty($servidores)) {
-            return response()->json($datos);
+        if (!empty($datos)) {
+            return response()->json($datos, 200);
         } else {
-            // $mensaje = [
-            //     'Mensaje' => "No hay datos por mostrar",
-            // ];
+            $mensaje = [
+                'Respuesta del Servidor' => "No hay datos por mostrar",
+            ];
 
-
-            //return response()->json($mensaje);
+            return response()->json($mensaje, 200);
         }
     }
 
@@ -64,41 +63,32 @@ class ServidorController extends Controller
             $reglas = [
                 'Nombre' => 'required|string',
                 'Descripcion' => 'required|string',
-                'Contrasena' => 'required|string',
-                'Notificaciones' => 'required|integer'
+                'UsuarioAdministrador' => 'required|string',
+                'Contrasena' => 'required|string'
             ];
 
             $validator = Validator::make($request->all(), $reglas);
 
             if ($validator->fails()) {
-                $mensaje = [
-                    'Mensaje' => "No pueden existir campos vacíos",
-                    'Error' => $validator->errors()->all()
-                ];
+                $errores =  implode(" ", $validator->errors()->all());
 
-                return response()->json($mensaje);
+                abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
             } else {
                 $servidor->Nombre = $request->Nombre;
                 $servidor->Descripcion = $request->Descripcion;
+                $servidor->UsuarioAdministrador = $request->UsuarioAdministrador;
                 $servidor->Contrasena = sha1($request->Contrasena);
-                $servidor->Notificaciones = $request->Notificaciones;
                 $servidor->save();
 
                 $mensaje = [
-                    'Respuesta del Servidor' => "201 Created",
-                    'Mensaje' => "Rol agregado correctamente",
-                    'Datos' => $servidor
+                    'Respuesta del Servidor' => "Servidor agregado correctamente",
+                    'Datos creados' => $servidor
                 ];
 
-                return response()->json($mensaje);
+                return response()->json($mensaje, 201);
             }
         } catch (\Throwable $th) {
-            $mensaje = [
-                'Respuesta del Servidor' => "Error 409 Conflict",
-                'Mensaje' => "El servidor '{$request->Nombre}' ya se encuentra registrado"
-            ];
-
-            return response()->json($mensaje);
+            abort(code: 409, message: "El servidor '{$request->Nombre}' ya se encuentra registrado");
         }
     }
 
@@ -110,21 +100,20 @@ class ServidorController extends Controller
      */
     public function show(Request $request)
     {
-        $servidor = Servidor::find($request->IdServidor);
+        $servidor = Servidor::where('Nombre', $request->IdServidor)->first();
 
         if (!empty($servidor)) {
             $mensaje = [
-                'Respuesta del Servidor' => "200 OK",
                 'ID' => $servidor->IdServidor,
                 'Nombre' => $servidor->Nombre,
                 'Descripcion' => $servidor->Descripcion,
-                'Contrasena' => $servidor->Contrasena,
-                'Notificaciones' => $servidor->Notificaciones
+                'Usuario Administrador' => $servidor->UsuarioAdministrador,
+                'Contrasena' => $servidor->Contrasena
             ];
 
-            return response()->json($mensaje);
+            return response()->json($mensaje, 200);
         } else {
-            abort(code:404, message:"No se encontro el servidor con ID: {$request->IdServidor}");
+            abort(code: 404, message: "No se encontro el servidor con Nombre: {$request->IdServidor}");
         }
     }
 
@@ -148,50 +137,47 @@ class ServidorController extends Controller
      */
     public function update(Request $request)
     {
-        try {
-            $servidor = Servidor::find($request->IdServidor);
+        $servidor = Servidor::find($request->IdServidor);
 
-            $reglas = [
-                'Nombre' => 'required|string',
-                'Descripcion' => 'required|string',
-            ];
+        if (!empty($servidor)) {
 
-            $validator = Validator::make($request->all(), $reglas);
-
-            if ($validator->fails()) {
-                $mensaje = [
-                    'Mensaje' => "No pueden existir campos vacíos",
-                    'Error' => $validator->errors()->all()
+            try {
+                $reglas = [
+                    'Nombre' => 'required|string',
+                    'Descripcion' => 'required|string',
+                    'UsuarioAdministrador' => 'required|string',
+                    'Contrasena' => 'required|string'
                 ];
 
-                return response()->json($mensaje);
-            } else {
-                $servidor->Nombre = $request->Nombre;
-                $servidor->Descripcion = $request->Descripcion;
-                $servidor->Contrasena = $request->Contrasena;
-                $servidor->Notificaciones = $request->Notificaciones;
-                $servidor->save();
+                $validator = Validator::make($request->all(), $reglas);
 
-                $mensaje = [
-                    'Respuesta del Servidor' => "200 OK",
-                    'Mensaje' => "Se actualizaron los datos correctamente",
-                    'ID' => $servidor->IdServidor,
-                    'Nombre' => $servidor->Nombre,
-                    'Descripcion' => $servidor->Descripcion,
-                    'Contrasena' => $servidor->Contrasena,
-                    'Notificaciones' => $servidor->Notificaciones
+                if ($validator->fails()) {
+                    $errores =  implode(" ", $validator->errors()->all());
 
-                ];
+                    abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
+                } else {
+                    $servidor->Nombre = $request->Nombre;
+                    $servidor->Descripcion = $request->Descripcion;
+                    $servidor->UsuarioAdministrador = $request->UsuarioAdministrador;
+                    $servidor->Contrasena = sha1($request->Contrasena);
+                    $servidor->save();
 
-                return response()->json($mensaje);
+                    $mensaje = [
+                        'Respuesta del Servidor' => "Se actualizaron los datos correctamente",
+                        'ID' => $servidor->IdServidor,
+                        'Nombre' => $servidor->Nombre,
+                        'Descripcion' => $servidor->Descripcion,
+                        'Usuario Administrador' => $servidor->UsuarioAdministrador,
+                        'Contrasena' => $servidor->Contrasena
+                    ];
+
+                    return response()->json($mensaje, 200);
+                }
+            } catch (\Throwable $th) {
+                abort(code: 409, message: "El servidor '{$request->Nombre}' ya se encuentra registrado");
             }
-        } catch (\Throwable $th) {
-            $mensaje = [
-                'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdServidor}"
-            ];
-
-            return response()->json($mensaje);
+        } else {
+            abort(code: 404, message: "No se encontro el servidor con ID: {$request->IdServidor}");
         }
     }
 
@@ -207,18 +193,12 @@ class ServidorController extends Controller
 
         if ($servidor) {
             $mensaje = [
-                'Respuesta del Servidor' => "200 OK",
-                'Mensaje' => "Se elimino el rol con ID: {$request->IdServidor}"
+                'Respuesta del Servidor' => "Se elimino el servidor con ID: {$request->IdServidor}"
             ];
 
-            return response()->json($mensaje);
+            return response()->json($mensaje, 200);
         } else {
-            $mensaje = [
-                'Respuesta del Servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdServidor}"
-            ];
-
-            return response()->json($mensaje);
+            abort(code: 404, message: "No se encontro el servidor con ID: {$request->IdServidor}");
         }
     }
 }

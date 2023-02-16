@@ -8,6 +8,55 @@ use Illuminate\Support\Facades\Validator;
 
 class UsuarioController extends Controller
 {
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+            $usuario = new Usuario();
+
+            $reglas = [
+                'Usuario' => 'required|string',
+                'Contrasena' => 'required|string',
+                'NombreCompleto' => 'required|string',
+                'Correo' => 'required|email'
+            ];
+
+            $validator = Validator::make($request->all(), $reglas);
+
+            if ($validator->fails()) {
+                $errores =  implode(" ", $validator->errors()->all());
+
+                abort(code: 400, message: "Error de validacion: {$errores}");
+            } else {
+                $usuario->Nombre = $request->Usuario;
+                $usuario->Contrasena = sha1($request->Contrasena);
+                $usuario->NombreCompleto = $request->NombreCompleto;
+                $usuario->Correo = $request->Correo;
+                $usuario->save();
+
+                $mensaje = [
+                    'Respuesta del Servidor' => "Servidor agregado correctamente",
+                    'Datos creados' => $usuario
+                ];
+
+                return response()->json($mensaje, 201);
+            }
+        } catch (\Throwable $th) {
+            //abort(code: 409, message: "El usuario '{$request->Nombre}' ya se encuentra registrado");
+        }
+    }
+
+    /**
+     * Validate Users.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function login(Request $request)
     {
 
@@ -19,32 +68,28 @@ class UsuarioController extends Controller
         $validator = Validator::make($request->all(), $reglas);
 
         if ($validator->fails()) {
-            $mensaje = [
-                'Mensaje' => "No pueden existir campos vacíos",
-                'Error' => $validator->errors()->all()
-            ];
+            $errores =  implode(" ", $validator->errors()->all());
 
-            return response()->json($mensaje);
+            abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
         } else {
             $usuario = Usuario::where('Nombre', $request->Usuario)->first();
 
             if ($usuario) {
                 if (sha1($request->Contrasena) == $usuario->Contrasena) {
                     $mensaje = [
-                        'Respuesta del Servidor' => '200 OK',
-                        'Mensaje' => "Bienvenido al sistema {$usuario->Nombre}"
+                        'Respuesta del Servidor' => "Bienvenido al sistema {$usuario->Nombre}"
                     ];
 
                     return response()->json($mensaje);
                 } else {
                     $mensaje = [
-                        'Mensaje' => "Contraseña Incorrecta"
+                        'Respuesta del Servidor' => "Contraseña Incorrecta"
                     ];
 
-                    return response()->json($mensaje);
+                    return response()->json($mensaje, 200);
                 }
             } else {
-                abort(code:404,message:"No existe este usuario");
+                abort(code: 404, message: "No existe este usuario");
             }
         }
     }

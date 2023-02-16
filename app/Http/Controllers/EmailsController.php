@@ -1,16 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Validator;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class EmailsController extends Controller
 {
-    public function enviarEmails(Request $request) {
-        require base_path("vendor/autoload.php");
-
+    public function enviarEmails(Request $request)
+    {
         $reglas = [
             'asunto' => 'required|string',
             'mensaje' => 'required|string',
@@ -28,8 +28,7 @@ class EmailsController extends Controller
                 'Error' => $validator->errors()->all()
             ];
             return response()->json($mensaje);
-
-        }else{
+        } else {
             try {
                 $mail = new PHPMailer();
                 $mail->IsSMTP();
@@ -51,18 +50,16 @@ class EmailsController extends Controller
                 <h4><strong>Mensaje: </strong></h4>
                 <h4>" . $request->mensaje . "</h4>";
                 $mail->send();
-
             } catch (Exception $e) {
-                 return back()->with('Error','Error al enviar los E-Mails.');
+                return back()->with('Error', 'Error al enviar los E-Mails.');
             }
 
-        $mensaje = [
-            'Respuesta del Servidor' => "200 OK",
-            'Mensaje' => "E-Mails enviados correctamente.",
-        ];
+            $mensaje = [
+                'Respuesta del Servidor' => "200 OK",
+                'Mensaje' => "E-Mails enviados correctamente.",
+            ];
 
-        return response()->json($mensaje);
+            return response()->json($mensaje);
         }
-
     }
 }

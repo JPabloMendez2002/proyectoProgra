@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Servicio;
+use App\Models\Servidor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,22 +22,22 @@ class ServicioController extends Controller
         foreach ($servicios as $servicio) {
             $datos[] = [
                 'ID' => $servicio->IdServicio,
+                'ID Servidor' => $servicio->IdServidor,
                 'Nombre' => $servicio->Nombre,
                 'Descripcion' => $servicio->Descripcion,
-                'IdServidor' => $servicio->IdServidor,
                 'Timeout' => $servicio->TimeoutRespuesta,
-                'Estado' => $servicio->EstadoServicio
+                'Tipo' => $servicio->Tipo
             ];
         }
 
-        if (!empty($servicios)) {
-            return response()->json($datos);
+        if (!empty($datos)) {
+            return response()->json($datos, 200);
         } else {
             $mensaje = [
-                'Mensaje' => "No hay datos por mostrar",
+                'Respuesta del Servidor' => "No hay datos por mostrar",
             ];
 
-            return response()->json($mensaje);
+            return response()->json($mensaje, 200);
         }
     }
 
@@ -58,49 +59,45 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+        $reglas = [
+            'IdServidor' => 'required|integer',
+            'Nombre' => 'required|string',
+            'Descripcion' => 'required|string',
+            'TimeoutRespuesta' => 'required|integer',
+            'Tipo' => 'required|string'
+        ];
+
+        $validator = Validator::make($request->all(), $reglas);
+
+        if ($validator->fails()) {
+            $errores =  implode(" ", $validator->errors()->all());
+
+            abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
+        } else {
             $servicio = new Servicio();
+            $servidor = Servidor::find($request->IdServidor);
 
-            $reglas = [
-                'Nombre' => 'required|string',
-                'Descripcion' => 'required|string',
-                'IdServidor' => 'required|integer',
-                'Estado' => 'required|integer'
-            ];
+            if (!empty($servidor)) {
+                try {
+                    $servicio->IdServidor = $request->IdServidor;
+                    $servicio->Nombre = $request->Nombre;
+                    $servicio->Descripcion = $request->Descripcion;
+                    $servicio->TimeoutRespuesta = $request->TimeoutRespuesta;
+                    $servicio->Tipo = $request->Tipo;
+                    $servicio->save();
 
-            $validator = Validator::make($request->all(), $reglas);
+                    $mensaje = [
+                        'Respuesta del Servidor' => "Servicio agregado correctamente",
+                        'Datos creados' => $servicio
+                    ];
 
-            if ($validator->fails()) {
-                $mensaje = [
-                    'Mensaje' => "No pueden existir campos vacíos",
-                    'Error' => $validator->errors()->all()
-                ];
-
-                return response()->json($mensaje);
+                    return response()->json($mensaje, 201);
+                } catch (\Throwable $th) {
+                    abort(code: 409, message: "El servicio '{$request->Nombre}' ya se encuentra registrado");
+                }
             } else {
-                $servicio->Nombre = $request->Nombre;
-                $servicio->Descripcion = $request->Descripcion;
-                $servicio->IdServidor = $request->IdServidor;
-                $servicio->TimeoutRespuesta = date('i');
-                $servicio->EstadoServicio = $request->Estado;
-
-                $servicio->save();
-
-                $mensaje = [
-                    'Respuesta del servidor' => "201 Created",
-                    'Mensaje' => "Rol agregado correctamente",
-                    'Datos' => $servicio
-                ];
-
-                return response()->json($mensaje);
+                abort(code: 500, message: "El servidor con ID '{$request->IdServidor}' no existe");
             }
-        } catch (\Throwable $th) {
-            // $mensaje = [
-            //     'Respuesta del servidor' => "Error 409 Conflict",
-            //     'Mensaje' => "El servicio '{$request->Nombre}' ya se encuentra registrado"
-            // ];
-
-            // return response()->json($mensaje);
         }
     }
 
@@ -112,27 +109,14 @@ class ServicioController extends Controller
      */
     public function show(Request $request)
     {
-        $servicio = Servicio::find($request->IdServicio);
+        $servidor = Servidor::find($request->IdServicio);
 
-        if (!empty($servicio)) {
-            $mensaje = [
-                'Respuesta del servicio' => "200 OK",
-                'ID' => $servicio->IdServicio,
-                'Nombre' => $servicio->Nombre,
-                'Descripcion' => $servicio->Descripcion,
-                'IdServidor' => $servicio->IdServidor,
-                'Timeout' => $servicio->TimeoutRespuesta,
-                'Estado' => $servicio->EstadoServicio
-            ];
+        if (!empty($servidor)) {
+            $servicios = Servicio::where('IdServidor', $request->IdServicio)->get();
 
-            return response()->json($mensaje);
+            return response()->json($servicios, 200);
         } else {
-            $mensaje = [
-                'Respuesta del servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdServicio}"
-            ];
-
-            return response()->json($mensaje);
+            abort(code: 404, message: "No se encontraron servicios vinculados al servidor: {$request->IdServicio}");
         }
     }
 
@@ -154,55 +138,52 @@ class ServicioController extends Controller
      * @param  \App\Models\Servicio  $servicio
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Servicio $servicio)
+    public function update(Request $request)
     {
-        try {
-            $servicio = Servicio::find($request->IdServicio);
+        $servicio = Servicio::find($request->IdServicio);
 
-            $reglas = [
-                'Nombre' => 'required|string',
-                'Descripcion' => 'required|string',
-                'IdServidor' => 'required|integer',
-                'Estado' => 'required|integer'
-            ];
+        if (!empty($servicio)) {
 
-            $validator = Validator::make($request->all(), $reglas);
-
-            if ($validator->fails()) {
-                $mensaje = [
-                    'Mensaje' => "No pueden existir campos vacíos",
-                    'Error' => $validator->errors()->all()
+            try {
+                $reglas = [
+                    'IdServidor' => 'required|integer',
+                    'Nombre' => 'required|string',
+                    'Descripcion' => 'required|string',
+                    'TimeoutRespuesta' => 'required|integer',
+                    'Tipo' => 'required|string'
                 ];
 
-                return response()->json($mensaje);
-            } else {
-                $servicio->Nombre = $request->Nombre;
-                $servicio->Descripcion = $request->Descripcion;
-                $servicio->IdServidor = $request->IdServidor;
-                $servicio->TimeoutRespuesta = date('i');
-                $servicio->EstadoServicio = $request->Estado;
-                $servicio->save();
+                $validator = Validator::make($request->all(), $reglas);
 
-                $mensaje = [
-                    'Respuesta del servidor' => "200 OK",
-                    'Mensaje' => "Se actualizaron los datos correctamente",
-                    'ID' => $servicio->IdServicio,
-                    'Nombre' => $servicio->Nombre,
-                    'Descripcion' => $servicio->Descripcion,
-                    'IdServicio' => $servicio->IdServicio,
-                    'Timeout' => $servicio->TimeoutRespuesta,
-                    'Estado' => $servicio->EstadoServicio
-                ];
+                if ($validator->fails()) {
+                    $errores =  implode(" ", $validator->errors()->all());
 
-                return response()->json($mensaje);
+                    abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
+                } else {
+                    $servicio->IdServidor = $request->IdServidor;
+                    $servicio->Nombre = $request->Nombre;
+                    $servicio->Descripcion = $request->Descripcion;
+                    $servicio->TimeoutRespuesta = $request->TimeoutRespuesta;
+                    $servicio->Tipo = $request->Tipo;
+                    $servicio->save();
+
+                    $mensaje = [
+                        'Respuesta del Servidor' => "Se actualizaron los datos correctamente",
+                        'ID' => $servicio->IdServicio,
+                        'ID Servidor' => $servicio->IdServidor,
+                        'Nombre' => $servicio->Nombre,
+                        'Descripcion' => $servicio->Descripcion,
+                        'Timeout' => $servicio->TimeoutRespuesta,
+                        'Tipo' => $servicio->Tipo
+                    ];
+
+                    return response()->json($mensaje, 200);
+                }
+            } catch (\Throwable $th) {
+                abort(code: 409, message: "El servicio '{$request->Nombre}' ya se encuentra registrado");
             }
-        } catch (\Throwable $th) {
-            $mensaje = [
-                'Respuesta del servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdServicio}"
-            ];
-
-            return response()->json($mensaje);
+        } else {
+            abort(code: 404, message: "No se encontro el servicio con ID: {$request->IdServicio}");
         }
     }
 
@@ -214,22 +195,16 @@ class ServicioController extends Controller
      */
     public function destroy(Request $request)
     {
-        $servicio = Servicio::destroy($request->IdServicio);
+        $servidor = Servicio::destroy($request->IdServicio);
 
-        if ($servicio) {
+        if ($servidor) {
             $mensaje = [
-                'Respuesta del servidor' => "200 OK",
-                'Mensaje' => "Se elimino el rol con ID: {$request->IdServicio}"
+                'Respuesta del Servidor' => "Se elimino el servicio con ID: {$request->IdServicio}"
             ];
 
-            return response()->json($mensaje);
+            return response()->json($mensaje, 200);
         } else {
-            $mensaje = [
-                'Respuesta del servidor' => "Error 404 Not Found",
-                'Mensaje' => "No se encontro el rol con ID: {$request->IdServicio}"
-            ];
-
-            return response()->json($mensaje);
+            abort(code: 404, message: "No se encontro el servicio con ID: {$request->IdServicio}");
         }
     }
 }
