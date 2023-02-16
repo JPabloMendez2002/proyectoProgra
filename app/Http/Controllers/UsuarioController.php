@@ -40,14 +40,14 @@ class UsuarioController extends Controller
                 $usuario->save();
 
                 $mensaje = [
-                    'Respuesta del Servidor' => "Servidor agregado correctamente",
+                    'Respuesta del Servidor' => "Usuario agregado correctamente",
                     'Datos creados' => $usuario
                 ];
 
                 return response()->json($mensaje, 201);
             }
         } catch (\Throwable $th) {
-            //abort(code: 409, message: "El usuario '{$request->Nombre}' ya se encuentra registrado");
+            abort(code: 409, message: "El usuario '{$request->Nombre}' ya se encuentra registrado");
         }
     }
 

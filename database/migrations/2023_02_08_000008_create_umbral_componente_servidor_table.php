@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('Umbral_Componente_Servidor', function (Blueprint $table) {
+            $table->id('IdParametro');
             $table->unsignedBigInteger('IdServidor');
             $table->unsignedBigInteger('IdComponente');
             $table->unsignedBigInteger('IdUmbral');

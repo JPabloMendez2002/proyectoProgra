@@ -7,7 +7,11 @@ use App\Http\Controllers\ServidorController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\EmailsController;
+use App\Http\Controllers\UmbralController;
+use App\Http\Controllers\ComponenteController;
+use App\Http\Controllers\ParametroServidorController;
 use App\Http\Controllers\DashController;
+use App\Http\Controllers\IniciarDetenerController;
 use App\Http\Controllers\MonitoreoServidorController;
 
 /*
@@ -33,8 +37,18 @@ Route::resource('servidores', ServidorController::class)->parameters(['servidore
 
 Route::resource('servicios', ServicioController::class)->parameters(['servicios'=>'IdServicio']);
 
+Route::post('umbrales', [UmbralController::class, 'store']);
+
+Route::post('componentes', [ComponenteController::class, 'store']);
+
 Route::post('monitoreoservidor', [MonitoreoServidorController::class, 'store']);
+
+Route::resource('parametrosservidor', ParametroServidorController::class)->parameters(['parametrosservidor'=>'IdParametro']);;
+
+Route::get('dash', [DashController::class, 'index']);
 
 Route::post("alertaservidor", [EmailsController::class, "enviarEmailServidor"])->name("alertaservidor");
 
 Route::post("alertaservicio", [EmailsController::class, "enviarEmailServicio"])->name("alertaservicio");
+
+Route::put('alertas/servicio/{IdEncargado}', [IniciarDetenerController::class, 'updateAlertaServicio']);
