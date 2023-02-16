@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('Monitoreo_Servidor', function (Blueprint $table) {
             $table->id('IdMonitoreo');
             $table->unsignedBigInteger('IdServidor');
-            $table->date('FechaMonitoreo');
+            $table->timestamp('FechaMonitoreo',$precision = 0);
             $table->integer('UsoCpu');
             $table->integer('UsoMemoria');
             $table->integer('UsoDisco');

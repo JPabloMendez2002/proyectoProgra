@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('Monitoreo_Servicio', function (Blueprint $table) {
             $table->id('IdMonitoreo');
             $table->unsignedBigInteger('IdServicio');
-            $table->date('FechaMonitoreo');
+            $table->timestamp('FechaMonitoreo',$precision = 0);
             $table->integer('Timeout');
             $table->boolean('Disponibilidad');
             $table->timestamps();
