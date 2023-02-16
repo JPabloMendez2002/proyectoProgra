@@ -103,6 +103,7 @@ class ComposerStaticInit54b28eec16d137908548963d9dce78ee
             'Psr\\Container\\' => 14,
             'PhpParser\\' => 10,
             'PhpOption\\' => 10,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'N' => 
         array (
@@ -370,6 +371,10 @@ class ComposerStaticInit54b28eec16d137908548963d9dce78ee
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
         'NunoMaduro\\Collision\\' => 
         array (
             0 => __DIR__ . '/..' . '/nunomaduro/collision/src',
@@ -524,12 +529,6 @@ class ComposerStaticInit54b28eec16d137908548963d9dce78ee
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\EmailsController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmailsController.php',
-        'App\\Http\\Controllers\\IntervaloController' => __DIR__ . '/../..' . '/app/Http/Controllers/IntervaloController.php',
-        'App\\Http\\Controllers\\MonitoreoServicioController' => __DIR__ . '/../..' . '/app/Http/Controllers/MonitoreoServicioController.php',
-        'App\\Http\\Controllers\\MonitoreoServidorController' => __DIR__ . '/../..' . '/app/Http/Controllers/MonitoreoServidorController.php',
-        'App\\Http\\Controllers\\ParametrosServiciosController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParametrosServiciosController.php',
-        'App\\Http\\Controllers\\ParametrosServidoresController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParametrosServidoresController.php',
-        'App\\Http\\Controllers\\RolController' => __DIR__ . '/../..' . '/app/Http/Controllers/RolController.php',
         'App\\Http\\Controllers\\ServicioController' => __DIR__ . '/../..' . '/app/Http/Controllers/ServicioController.php',
         'App\\Http\\Controllers\\ServidorController' => __DIR__ . '/../..' . '/app/Http/Controllers/ServidorController.php',
         'App\\Http\\Controllers\\UsuarioController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsuarioController.php',
@@ -543,12 +542,6 @@ class ComposerStaticInit54b28eec16d137908548963d9dce78ee
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\ValidateSignature' => __DIR__ . '/../..' . '/app/Http/Middleware/ValidateSignature.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
-        'App\\Models\\Intervalo' => __DIR__ . '/../..' . '/app/Models/Intervalo.php',
-        'App\\Models\\MonitoreoServicio' => __DIR__ . '/../..' . '/app/Models/MonitoreoServicio.php',
-        'App\\Models\\MonitoreoServidor' => __DIR__ . '/../..' . '/app/Models/MonitoreoServidor.php',
-        'App\\Models\\Parametros_Servicios' => __DIR__ . '/../..' . '/app/Models/Parametros_Servicios.php',
-        'App\\Models\\Parametros_Servidores' => __DIR__ . '/../..' . '/app/Models/Parametros_Servidores.php',
-        'App\\Models\\Rol' => __DIR__ . '/../..' . '/app/Models/Rol.php',
         'App\\Models\\Servicio' => __DIR__ . '/../..' . '/app/Models/Servicio.php',
         'App\\Models\\Servidor' => __DIR__ . '/../..' . '/app/Models/Servidor.php',
         'App\\Models\\Usuario' => __DIR__ . '/../..' . '/app/Models/Usuario.php',
@@ -3389,6 +3382,12 @@ class ComposerStaticInit54b28eec16d137908548963d9dce78ee
         'NunoMaduro\\Collision\\Provider' => __DIR__ . '/..' . '/nunomaduro/collision/src/Provider.php',
         'NunoMaduro\\Collision\\SolutionsRepositories\\NullSolutionsRepository' => __DIR__ . '/..' . '/nunomaduro/collision/src/SolutionsRepositories/NullSolutionsRepository.php',
         'NunoMaduro\\Collision\\Writer' => __DIR__ . '/..' . '/nunomaduro/collision/src/Writer.php',
+        'PHPMailer\\PHPMailer\\Exception' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/Exception.php',
+        'PHPMailer\\PHPMailer\\OAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuth.php',
+        'PHPMailer\\PHPMailer\\OAuthTokenProvider' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/OAuthTokenProvider.php',
+        'PHPMailer\\PHPMailer\\PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/PHPMailer.php',
+        'PHPMailer\\PHPMailer\\POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/POP3.php',
+        'PHPMailer\\PHPMailer\\SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/src/SMTP.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\ActualValueIsNotAnObjectException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Exception/ActualValueIsNotAnObjectException.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',
