@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\IniciarDetenerServicio;
+use App\Models\IniciarDetenerServidor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -72,29 +73,11 @@ class IniciarDetenerController extends Controller
     public function updateAlertaServicio(Request $request, $id)
     {
         $encargado = IniciarDetenerServicio::find($request->IdEncargado);
-        
-        // if(!empty($encargado)){
-        //     $verifica = IniciarDetenerServicio::find($request->Alertas);
-        // }
-
-
-        // $verifica = IniciarDetenerServicio::WHERE("IdEncargado", "=", $request->IdEncargado)
-        //  ->SELECT("Alertas")->get();
-
-        // echo $verifica;
-        // if($verifica->Alertas == $request->Alertas){
-        //     abort(code: 409, message: "La alerta ya se encuentra en estado '{$request->Alertas}'");
-        // }
-        $estadoactual = IniciarDetenerServicio::WHERE('IdEncargado', "=", $request->IdEncargado)
-        ->SELECT('Alertas');
-
-        // if ($encargado->Alertas == 1) {
-        //     abort(code: 409, message: "La alerta ya se encuentra en estado '{$encargado->Alertas}'");
-        // } else {
-            echo $estadoactual;
+        $estadoactual = IniciarDetenerServicio::WHERE('Alertas', "=", $request->Alertas)
+        ->WHERE('IdEncargado', "=", $request->IdEncargado)
+        ->exists();
 
             if (!empty($encargado)) {
-
                 $reglas = [
                     'Alertas' => 'required|boolean'
                 ];
@@ -106,6 +89,9 @@ class IniciarDetenerController extends Controller
 
                     abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
                 } else {
+                    if ($encargado->Alertas = $estadoactual) {
+                        abort(code: 409, message: "La alerta ya se encuentra en estado '{$request->Alertas}'");
+                    }else{
                         $encargado->Alertas = $request->Alertas;
                         $encargado->save();
 
@@ -114,19 +100,59 @@ class IniciarDetenerController extends Controller
                             'Alertas' => $encargado->Alertas,
                         ];
 
-                        return response()->json($mensaje, 200);     
+                        return response()->json($mensaje, 200);  
+                    }   
                 }
             } else {
-                abort(code: 404, message: "No se encontro el un encargado de servicio con ID: {$request->IdEncargado}");
+                abort(code: 404, message: "No se encontro un encargado de servicio con ID: {$request->IdEncargado}");
             }
-        
             
-
-
-
+        
         
     }
 
+
+
+    public function updateAlertaServidor(Request $request, $id)
+    {
+        $encargado = IniciarDetenerServidor::find($request->IdEncargado);
+        $estadoactual = IniciarDetenerServidor::WHERE('Alertas', "=", $request->Alertas)
+        ->WHERE('IdEncargado', "=", $request->IdEncargado)
+        ->exists();
+
+            if (!empty($encargado)) {
+                $reglas = [
+                    'Alertas' => 'required|boolean'
+                ];
+
+                $validator = Validator::make($request->all(), $reglas);
+
+                if ($validator->fails()) {
+                    $errores =  implode(" ", $validator->errors()->all());
+
+                    abort(code: 400, message: "No pueden existir campos vacíos: {$errores}");
+                } else {
+                    if ($encargado->Alertas = $estadoactual) {
+                        abort(code: 409, message: "La alerta ya se encuentra en estado '{$request->Alertas}'");
+                    }else{
+                        $encargado->Alertas = $request->Alertas;
+                        $encargado->save();
+
+                        $mensaje = [
+                            'Respuesta del Servidor' => "Se actualizaron los datos correctamente",
+                            'Alertas' => $encargado->Alertas,
+                        ];
+
+                        return response()->json($mensaje, 200);  
+                    }   
+                }
+            } else {
+                abort(code: 404, message: "No se encontro un encargado de servidor con ID: {$request->IdEncargado}");
+            }
+            
+        
+        
+    }
     /**
      * Remove the specified resource from storage.
      *
