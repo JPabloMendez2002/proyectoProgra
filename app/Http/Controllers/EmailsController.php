@@ -16,19 +16,19 @@ class EmailsController extends Controller
     public function enviarEmailServidor(Request $request)
     {
 
-      $listaCorreos = Servidor::JOIN("Encargo_Servidor","Encargo_Servidor.IdServidor", "=", "Servidores.IdServidor")
-      ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servidor.IdEncargado")
-      ->WHERE("Encargo_Servidor.Alertas", "=", 1)
-      ->WHERE("Servidores.IdServidor", "=",$request->idservidor)
-      ->SELECT("Usuarios.Correo")->pluck('Correo');
+        $listaCorreos = Servidor::JOIN("Encargo_Servidor", "Encargo_Servidor.IdServidor", "=", "Servidores.IdServidor")
+            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servidor.IdEncargado")
+            ->WHERE("Encargo_Servidor.Alertas", "=", 1)
+            ->WHERE("Servidores.IdServidor", "=", $request->idservidor)
+            ->SELECT("Usuarios.Correo")->pluck('Correo');
 
-      $nombreServidor = Servidor::JOIN("Encargo_Servidor","Encargo_Servidor.IdServidor", "=", "Servidores.IdServidor")
-      ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servidor.IdEncargado")
-      ->WHERE("Encargo_Servidor.Alertas", "=", 1)
-      ->WHERE("Servidores.IdServidor", "=",$request->idservidor)
-      ->SELECT("Servidores.Nombre")->value('Nombre');
-         
- 
+        $nombreServidor = Servidor::JOIN("Encargo_Servidor", "Encargo_Servidor.IdServidor", "=", "Servidores.IdServidor")
+            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servidor.IdEncargado")
+            ->WHERE("Encargo_Servidor.Alertas", "=", 1)
+            ->WHERE("Servidores.IdServidor", "=", $request->idservidor)
+            ->SELECT("Servidores.Nombre")->value('Nombre');
+
+
         $reglas = [
             'idservidor' => 'required|int',
             'asunto' => 'required|string',
@@ -43,8 +43,7 @@ class EmailsController extends Controller
                 'Error' => $validator->errors()->all()
             ];
             return response()->json($mensaje, 400);
-
-        } else {        
+        } else {
             try {
                 $mail = new PHPMailer(true);
                 $mail->IsSMTP();
@@ -59,7 +58,7 @@ class EmailsController extends Controller
                 $mail->isHTML(true);
                 $mail->Subject = $request->asunto;
                 $mail->Body = "<h3>Asunto: " . $request->asunto . "</h3>
-                <strong>Nombre del Servidor: ".$nombreServidor."</strong>
+                <strong>Nombre del Servidor: " . $nombreServidor . "</strong>
                 <h4><strong>Mensaje: </strong></h4>
                 <h4>" . $request->mensaje . "</h4>";
                 foreach ($listaCorreos as $destinatarios) {
@@ -75,27 +74,25 @@ class EmailsController extends Controller
                 'Mensaje' => "E-Mails enviados correctamente.",
             ];
 
-            return response()->json($mensaje,200);
-          
+            return response()->json($mensaje, 200);
         }
-      
     }
 
     public function enviarEmailServicio(Request $request)
     {
 
-      $listaCorreos = Servicio::JOIN("Encargo_Servicio","Encargo_Servicio.IdServicio", "=", "Servicios.IdServicio")
-      ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servicio.IdEncargado")
-      ->WHERE("Encargo_Servicio.Alertas", "=", 1)
-      ->WHERE("Servicios.IdServicio", "=",$request->idservicio)
-      ->SELECT("Usuarios.Correo")->pluck('Correo');
+        $listaCorreos = Servicio::JOIN("Encargo_Servicio", "Encargo_Servicio.IdServicio", "=", "Servicios.IdServicio")
+            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servicio.IdEncargado")
+            ->WHERE("Encargo_Servicio.Alertas", "=", 1)
+            ->WHERE("Servicios.IdServicio", "=", $request->idservicio)
+            ->SELECT("Usuarios.Correo")->pluck('Correo');
 
-      $nombreServicio =  Servicio::JOIN("Encargo_Servicio","Encargo_Servicio.IdServicio", "=", "Servicios.IdServicio")
-      ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servicio.IdEncargado")
-      ->WHERE("Encargo_Servicio.Alertas", "=", 1)
-      ->WHERE("Servicios.IdServicio", "=",$request->idservicio)
-      ->SELECT("Servicios.Nombre")->value('Nombre');
-     
+        $nombreServicio =  Servicio::JOIN("Encargo_Servicio", "Encargo_Servicio.IdServicio", "=", "Servicios.IdServicio")
+            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servicio.IdEncargado")
+            ->WHERE("Encargo_Servicio.Alertas", "=", 1)
+            ->WHERE("Servicios.IdServicio", "=", $request->idservicio)
+            ->SELECT("Servicios.Nombre")->value('Nombre');
+
         $reglas = [
             'idservicio' => 'required|int',
             'asunto' => 'required|string',
@@ -110,8 +107,7 @@ class EmailsController extends Controller
                 'Error' => $validator->errors()->all()
             ];
             return response()->json($mensaje, 400);
-
-        } else {        
+        } else {
             try {
                 $mail = new PHPMailer(true);
                 $mail->IsSMTP();
@@ -126,7 +122,7 @@ class EmailsController extends Controller
                 $mail->isHTML(true);
                 $mail->Subject = $request->asunto;
                 $mail->Body = "<h3>Asunto: " . $request->asunto . "</h3>
-                <strong>Nombre del Servicio: ".$nombreServicio."</strong>
+                <strong>Nombre del Servicio: " . $nombreServicio . "</strong>
                 <h4><strong>Mensaje: </strong></h4>
                 <h4>" . $request->mensaje . "</h4>";
                 foreach ($listaCorreos as $destinatarios) {
@@ -142,10 +138,7 @@ class EmailsController extends Controller
                 'Mensaje' => "E-Mails enviados correctamente.",
             ];
 
-            return response()->json($mensaje,200);
-          
+            return response()->json($mensaje, 200);
         }
-      
     }
-
 }

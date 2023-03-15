@@ -185,7 +185,7 @@ class ServicioController extends Controller
                     } catch (\Throwable $th) {
                         abort(code: 409, message: "El servicio '{$request->Nombre}' ya se encuentra registrado");
                     }
-                }else{
+                } else {
                     abort(code: 404, message: "No se encontro el servidor con ID: {$request->IdServidor}");
                 }
             } else {

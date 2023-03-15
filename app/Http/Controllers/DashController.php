@@ -14,24 +14,17 @@ class DashController extends Controller
      */
     public function index()
     {
-        $servicios = Servicio::all();
 
-        $monitoreos = Servidor::join('Monitoreo_Servidor', 'Monitoreo_Servidor.IdServidor', '=', 'Servidores.IdServidor')->select('Monitoreo_Servidor.FechaMonitoreo', 'Servidores.IdServidor AS ID Servidor', 'Servidores.Nombre AS Nombre Servidor', 'Monitoreo_Servidor.UsoCpu', 'Monitoreo_Servidor.UsoMemoria', 'Monitoreo_Servidor.UsoDisco')->get();
+        $monitoreos = Servidor::join('Monitoreo_Servidor', 'Monitoreo_Servidor.IdServidor', '=', 'Servidores.IdServidor')->select('Monitoreo_Servidor.IdMonitoreo', 'Monitoreo_Servidor.FechaMonitoreo', 'Servidores.IdServidor AS ID Servidor', 'Servidores.Nombre AS Nombre Servidor', 'Monitoreo_Servidor.UsoCpu', 'Monitoreo_Servidor.UsoMemoria', 'Monitoreo_Servidor.UsoDisco')->get();
+
+        $servicios = Servicio::join('Monitoreo_Servicio', 'Monitoreo_Servicio.IdServicio', '=', 'Servicios.IdServicio')->select('Monitoreo_Servicio.IdMonitoreo','Servicios.IdServicio AS ID Servicio', 'Monitoreo_Servicio.Disponibilidad', 'Monitoreo_Servicio.Descripcion', 'Monitoreo_Servicio.Timeout')->get();
 
         if (!empty($monitoreos)) {
 
-            foreach ($servicios as $servicio) {
-                $serviciosMostrar[] = [
-                    "ID del Servidor" => $servicio->IdServidor,
-                    "Nombre del servicio" => $servicio->Nombre,
-                    "Estado" => 'Activo'
-                ];
-            }
-
-            if (!empty($serviciosMostrar)) {
+            if (!empty($servicios)) {
                 $datos[] = [
                     "Informacion de los Servidorores" => $monitoreos,
-                    "Informacion de los Servicios" => $serviciosMostrar
+                    "Informacion de los Servicios" => $servicios
                 ];
 
                 return response()->json($datos, 200);

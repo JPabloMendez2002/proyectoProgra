@@ -67,11 +67,11 @@ class EncargadoServicioController extends Controller
                 $sevidor = Servicio::find($request->IdServicio);
                 if (!empty($sevidor)) {
                     $mismoservicio = EncargadoServicio::WHERE('IdServicio', "=", $request->IdServicio)
-                    ->WHERE('IdEncargado', "=", $request->IdEncargado)
-                    ->exists();
+                        ->WHERE('IdEncargado', "=", $request->IdEncargado)
+                        ->exists();
                     if (!empty($mismoservicio)) {
                         abort(code: 409, message: "El usuario con ID: {$request->IdEncargado} ya se encuentra a cargo del servivio con ID: {$request->IdServicio}");
-                    }else{
+                    } else {
 
                         $encargado->IdEncargado = $request->IdEncargado;
                         $encargado->IdServicio = $request->IdServicio;
@@ -82,18 +82,15 @@ class EncargadoServicioController extends Controller
                         $mensaje = [
                             'Respuesta del Servidor' => "Encargado de servicio agregado correctamente",
                         ];
-                    
+
                         return response()->json($mensaje, 201);
                     }
-
                 } else {
                     abort(code: 404, message: "No se encontro el servicio con ID: {$request->IdServicio}");
                 }
             } else {
                 abort(code: 404, message: "No se encontro el usuario con ID: {$request->IdEncargado}");
             }
-
-            
         }
     }
 
