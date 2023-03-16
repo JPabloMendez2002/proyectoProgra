@@ -22,7 +22,6 @@ class MonitoreoServidorController extends Controller
     {
         $reglas = [
             'IdServidor' => 'required|integer',
-            'Fecha' => 'required|string',
             'UsoCPU' => 'required|integer',
             'UsoMemoria' => 'required|integer',
             'UsoDisco' => 'required|integer',
