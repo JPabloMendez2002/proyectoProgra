@@ -15,11 +15,21 @@ class UsuarioSeeder extends Seeder
      */
     public function run()
     {
+
+        $usuario = new Usuario();
+        $usuario->Nombre = 'Admin';
+        $usuario->Contrasena = Hash::make("123");
+        $usuario->NombreCompleto = 'Felipe Lotas';
+        $usuario->Correo = 'Felipe@mail.com';
+        $usuario->TipoUsuario = 1;
+        $usuario->save();
+
         $usuario1 = new Usuario();
         $usuario1->Nombre = 'Dan';
         $usuario1->Contrasena = Hash::make("123");
         $usuario1->NombreCompleto = 'Dan Perez Gomez';
         $usuario1->Correo = 'Dan@mail.com';
+        $usuario1->TipoUsuario = 0;
         $usuario1->save();
 
         $usuario2 = new Usuario();
@@ -27,6 +37,7 @@ class UsuarioSeeder extends Seeder
         $usuario2->Contrasena = Hash::make("123");
         $usuario2->NombreCompleto = 'Maria Zuñiga Guzman';
         $usuario2->Correo = 'Maria@mail.com';
+        $usuario2->TipoUsuario = 0;
         $usuario2->save();
 
         $usuario3 = new Usuario();
@@ -34,6 +45,7 @@ class UsuarioSeeder extends Seeder
         $usuario3->Contrasena = Hash::make("123");
         $usuario3->NombreCompleto = 'Pedro Segura Montoya';
         $usuario3->Correo = 'Pedro@mail.com';
+        $usuario3->TipoUsuario = 0;
         $usuario3->save();
     }
 }

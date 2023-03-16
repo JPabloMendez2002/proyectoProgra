@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('Contrasena',100);
             $table->string('NombreCompleto',50);
             $table->string('Correo',30);
+            $table->integer('TipoUsuario');
             $table->timestamps();
         });
     }

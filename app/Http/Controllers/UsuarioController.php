@@ -23,7 +23,8 @@ class UsuarioController extends Controller
                 'Usuario' => 'required|string',
                 'Contrasena' => 'required|string',
                 'NombreCompleto' => 'required|string',
-                'Correo' => 'required|email'
+                'Correo' => 'required|email',
+                'TipoUsuario'=> 'required|boolean'
             ];
 
             $validator = Validator::make($request->all(), $reglas);
@@ -37,6 +38,7 @@ class UsuarioController extends Controller
                 $usuario->Contrasena = sha1($request->Contrasena);
                 $usuario->NombreCompleto = $request->NombreCompleto;
                 $usuario->Correo = $request->Correo;
+                $usuario->TipoUsuario = $request->TipoUsuario;
                 $usuario->save();
 
                 $mensaje = [
