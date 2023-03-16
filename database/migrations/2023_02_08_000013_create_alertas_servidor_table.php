@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('Alertas_Servidor', function (Blueprint $table) {
             $table->unsignedBigInteger('IdServidor');
-            $table->boolean('Alertas');
+            $table->boolean('Monitoreo');
             $table->timestamps();
 
             $table->foreign('IdServidor')->references('IdServidor')->on('Servidores');

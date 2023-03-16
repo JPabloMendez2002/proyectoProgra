@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MonitoreoServicio;
 use App\Models\Servidor;
 use App\Models\Servicio;
 use App\Models\MonitoreoServidor;
@@ -56,7 +57,6 @@ class DashController extends Controller
         $monitoreos = Servidor::join('Monitoreo_Servidor', 'Monitoreo_Servidor.IdServidor', '=', 'Servidores.IdServidor')->select('Monitoreo_Servidor.IdMonitoreo', 'Monitoreo_Servidor.FechaMonitoreo', 'Servidores.IdServidor AS ID Servidor', 'Servidores.Nombre AS Nombre Servidor', 'Monitoreo_Servidor.UsoCpu', 'Monitoreo_Servidor.UsoMemoria', 'Monitoreo_Servidor.UsoDisco')->get();
         $servicios = Servicio::join('Monitoreo_Servicio', 'Monitoreo_Servicio.IdServicio', '=', 'Servicios.IdServicio')->select('Monitoreo_Servicio.IdMonitoreo','Servicios.IdServicio AS ID Servicio', 'Monitoreo_Servicio.Disponibilidad', 'Monitoreo_Servicio.Descripcion', 'Monitoreo_Servicio.Timeout')->get();
 
-        //echo $monitoreoServidor;
         if (!empty($monitoreos)) {
 
             if (!empty($servicios)) {
@@ -93,5 +93,11 @@ class DashController extends Controller
 
             return response()->json($mensaje, 200);
         }
+    }
+
+    public function dashVista(){
+        $monitoreos = Servidor::join('Monitoreo_Servidor', 'Monitoreo_Servidor.IdServidor', '=', 'Servidores.IdServidor')->join('Alertas_Servidor', 'Alertas_Servidor.IdServidor', '=', 'Servidores.IdServidor')->select('Servidores.IdServidor', 'Servidores.Nombre','Monitoreo_Servidor.FechaMonitoreo',  'Monitoreo_Servidor.UsoCpu', 'Monitoreo_Servidor.UsoMemoria', 'Monitoreo_Servidor.UsoDisco','Alertas_Servidor.Monitoreo')->get();
+
+        return response()->json($monitoreos, 200);
     }
 }

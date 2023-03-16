@@ -24,7 +24,7 @@ class UsuarioController extends Controller
                 'Contrasena' => 'required|string',
                 'NombreCompleto' => 'required|string',
                 'Correo' => 'required|email',
-                'TipoUsuario'=> 'required|boolean'
+                'TipoUsuario' => 'required|boolean'
             ];
 
             $validator = Validator::make($request->all(), $reglas);
@@ -76,21 +76,26 @@ class UsuarioController extends Controller
             $usuario = Usuario::where('Nombre', $request->Usuario)->first();
 
             if ($usuario) {
+
                 if (sha1($request->Contrasena) == $usuario->Contrasena) {
                     $mensaje = [
                         'Respuesta del Servidor' => "Bienvenido al sistema {$usuario->Nombre}"
                     ];
 
-                    return response()->json($mensaje);
+                    return response()->json($mensaje, 200);
                 } else {
                     $mensaje = [
-                        'Respuesta del Servidor' => "Contraseña Incorrecta"
+                        'Respuesta del Servidor' => "Usuario y/o contraseña incorrectos"
                     ];
 
                     return response()->json($mensaje, 200);
                 }
             } else {
-                abort(code: 404, message: "No existe este usuario");
+                $mensaje = [
+                    'Respuesta del Servidor' => "Usuario y/o contraseña incorrectos"
+                ];
+
+                return response()->json($mensaje, 200);
             }
         }
     }

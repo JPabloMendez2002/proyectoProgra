@@ -72,7 +72,7 @@ class AlertaServidorController extends Controller
     public function update(Request $request)
     {
         $reglas = [
-            'Alerta' => 'required|boolean'
+            'Monitoreo' => 'required|boolean'
         ];
 
         $validator = Validator::make($request->all(), $reglas);
@@ -80,14 +80,14 @@ class AlertaServidorController extends Controller
         if ($validator->fails()) {
             $errores =  implode(" ", $validator->errors()->all());
 
-            abort(code: 400, message: "Errpr de validaciones: {$errores}");
+            abort(code: 400, message: "Error de validaciones: {$errores}");
         }else{
             $servidor = Servidor::find($request->IdServidor);
 
             if(!empty($servidor)){
                 $alertas = AlertasServidor::find($request->IdServidor);
 
-                $alertas->Alertas = $request->Alerta;
+                $alertas->Monitoreo = $request->Monitoreo;
                 $alertas->save();
 
                 $mensaje = [

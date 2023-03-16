@@ -52,6 +52,8 @@ Route::get('dash', [DashController::class, 'index']);
 
 Route::get('ServicioDash', [DashController::class, 'ServicioDash']);
 
+Route::get('dash/vista', [DashController::class, 'dashVista']);
+
 Route::post("alertaservidor", [EmailsController::class, "enviarEmailServidor"])->name("alertaservidor");
 
 Route::post("alertaservicio", [EmailsController::class, "enviarEmailServicio"])->name("alertaservicio");
