@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Servidor;
 use App\Models\Servicio;
-use App\Models\MonitoreoServicio;
 use App\Models\MonitoreoServidor;
-use App\Models\EncargadoServicio;
 class DashController extends Controller
 {
     /**
@@ -46,7 +44,6 @@ class DashController extends Controller
         }
     }
 
-
     public function ServicioDash(){
 
         $monitoreoServidor = MonitoreoServidor::JOIN('Monitoreo_Servicio', 'Monitoreo_Servidor.IdMonitoreo', '=','Monitoreo_Servicio.IdMonitoreo')
@@ -71,17 +68,17 @@ class DashController extends Controller
                         "Informacion de los Servicios" => $servicios,
                         "Servicios con problemas" => $monitoreoServidor
                     ];
-    
+
                     return response()->json($datos, 200);
 
                 }else{
                     $mensaje = [
                         'Respuesta del Servidor' => "No hay datos por mostrar",
                     ];
-    
+
                     return response()->json($mensaje, 200);
                 }
-        
+
             } else {
                 $mensaje = [
                     'Respuesta del Servidor' => "No hay datos por mostrar",

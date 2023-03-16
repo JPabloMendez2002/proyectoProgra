@@ -17,9 +17,9 @@ class UsuarioSeeder extends Seeder
     {
 
         $usuario = new Usuario();
-        $usuario->Nombre = 'Admin';
+        $usuario->Nombre = 'Felipe';
         $usuario->Contrasena = Hash::make("123");
-        $usuario->NombreCompleto = 'Felipe Lotas';
+        $usuario->NombreCompleto = 'Felipe Houdson Robles';
         $usuario->Correo = 'Felipe@mail.com';
         $usuario->TipoUsuario = 1;
         $usuario->save();

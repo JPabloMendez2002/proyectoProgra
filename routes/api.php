@@ -15,6 +15,7 @@ use App\Http\Controllers\IniciarDetenerController;
 use App\Http\Controllers\MonitoreoServidorController;
 use App\Http\Controllers\EncargadoServicioController;
 use App\Http\Controllers\EncargadoServidorController;
+use App\Http\Controllers\AlertaServidorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,8 @@ Route::post("alertaservicio", [EmailsController::class, "enviarEmailServicio"])-
 Route::put('alertas/servicio/{IdEncargado}', [IniciarDetenerController::class, 'updateAlertaServicio']);
 
 Route::put('alertas/servidor/{IdEncargado}', [IniciarDetenerController::class, 'updateAlertaServidor']);
+
+Route::put('alerta/servidor/{IdServidor}', [AlertaServidorController::class, 'update']);
 
 Route::post('encargadoservicio', [EncargadoServicioController::class, 'store']);
 

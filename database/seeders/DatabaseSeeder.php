@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\UmbralComponenteServidor;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,5 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(Encargado_ServidorSeeder::class);
         $this->call(ServicioSeeder::class);
         $this->call(Encargado_ServicioSeeder::class);
+        $this->call(Umbral_Componente_ServidorSeeder::class);
+        $this->call(Alertas_ServidorSeeder::class);
     }
 }

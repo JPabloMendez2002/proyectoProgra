@@ -61,7 +61,6 @@ class UsuarioController extends Controller
      */
     public function login(Request $request)
     {
-
         $reglas = [
             'Usuario' => 'required|string',
             'Contrasena' => 'required|string',
