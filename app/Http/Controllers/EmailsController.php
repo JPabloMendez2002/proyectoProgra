@@ -16,34 +16,21 @@ class EmailsController extends Controller
     public function enviarEmailServidor(Request $request)
     {
 
-        $listaCorreos = Servidor::JOIN("Encargo_Servidor", "Encargo_Servidor.IdServidor", "=", "Servidores.IdServidor")
-            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servidor.IdEncargado")
-            ->WHERE("Encargo_Servidor.Alertas", "=", 1)
-            ->WHERE("Servidores.IdServidor", "=", $request->idservidor)
+        $listaCorreos = Servidor::JOIN("Encargado_Servidor", "Encargado_Servidor.IdServidor", "=", "Servidores.IdServidor")
+            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargado_Servidor.IdEncargado")
+            ->WHERE("Encargado_Servidor.Alertas", "=", 1)
+            ->WHERE("Servidores.IdServidor", "=", $request->IdServidor)
             ->SELECT("Usuarios.Correo")->pluck('Correo');
 
-        $nombreServidor = Servidor::JOIN("Encargo_Servidor", "Encargo_Servidor.IdServidor", "=", "Servidores.IdServidor")
-            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargo_Servidor.IdEncargado")
-            ->WHERE("Encargo_Servidor.Alertas", "=", 1)
-            ->WHERE("Servidores.IdServidor", "=", $request->idservidor)
+        $nombreServidor = Servidor::JOIN("Encargado_Servidor", "Encargado_Servidor.IdServidor", "=", "Servidores.IdServidor")
+            ->JOIN("Usuarios", "Usuarios.IdUsuario", "=", "Encargado_Servidor.IdEncargado")
+            ->WHERE("Encargado_Servidor.Alertas", "=", 1)
+            ->WHERE("Servidores.IdServidor", "=", $request->IdServidor)
             ->SELECT("Servidores.Nombre")->value('Nombre');
 
 
-        $reglas = [
-            'idservidor' => 'required|int',
-            'asunto' => 'required|string',
-            'mensaje' => 'required|string'
-        ];
 
-        $validator = Validator::make($request->all(), $reglas);
-
-        if ($validator->fails()) {
-            $mensaje = [
-                'Mensaje' => "No pueden existir campos vacíos",
-                'Error' => $validator->errors()->all()
-            ];
-            return response()->json($mensaje, 400);
-        } else {
+ 
             try {
                 $mail = new PHPMailer(true);
                 $mail->IsSMTP();
@@ -56,11 +43,9 @@ class EmailsController extends Controller
                 $mail->CharSet = 'UTF-8';
                 $mail->SetFrom('prograv@spestechnical.com', 'GRUPO SPES');
                 $mail->isHTML(true);
-                $mail->Subject = $request->asunto;
-                $mail->Body = "<h3>Asunto: " . $request->asunto . "</h3>
-                <strong>Nombre del Servidor: " . $nombreServidor . "</strong>
-                <h4><strong>Mensaje: </strong></h4>
-                <h4>" . $request->mensaje . "</h4>";
+                $mail->Subject ="Problema con el Servidor: " . $nombreServidor;
+                $mail->Body = "<p>Se han presentado problemas con el Servidor: <strong>" . $nombreServidor . "</strong></p>
+                <p>O uno de sus servicios, por favor verificar.</p>";
                 foreach ($listaCorreos as $destinatarios) {
                     $mail->addAddress($destinatarios);
                 }
@@ -75,7 +60,6 @@ class EmailsController extends Controller
             ];
 
             return response()->json($mensaje, 200);
-        }
     }
 
     public function enviarEmailServicio(Request $request)
