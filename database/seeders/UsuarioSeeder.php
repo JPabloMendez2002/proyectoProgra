@@ -19,7 +19,7 @@ class UsuarioSeeder extends Seeder
         $usuario->Nombre = 'Felipe';
         $usuario->Contrasena = sha1("123");
         $usuario->NombreCompleto = 'Felipe Houdson Robles';
-        $usuario->Correo = 'Felipe@mail.com';
+        $usuario->Correo = 'pablopoveda1307@gmail.com';
         $usuario->TipoUsuario = 1;
         $usuario->save();
 
@@ -27,7 +27,7 @@ class UsuarioSeeder extends Seeder
         $usuario1->Nombre = 'Dan';
         $usuario1->Contrasena = sha1("123");
         $usuario1->NombreCompleto = 'Dan Perez Gomez';
-        $usuario1->Correo = 'Dan@mail.com';
+        $usuario1->Correo = 'admin@spestechnical.com';
         $usuario1->TipoUsuario = 0;
         $usuario1->save();
 
@@ -35,7 +35,7 @@ class UsuarioSeeder extends Seeder
         $usuario2->Nombre = 'Maria';
         $usuario2->Contrasena = sha1("123");
         $usuario2->NombreCompleto = 'Maria Zuñiga Guzman';
-        $usuario2->Correo = 'Maria@mail.com';
+        $usuario2->Correo = 'soporte@spestechnical.com';
         $usuario2->TipoUsuario = 0;
         $usuario2->save();
 
@@ -43,7 +43,7 @@ class UsuarioSeeder extends Seeder
         $usuario3->Nombre = 'Pedro';
         $usuario3->Contrasena = sha1("123");
         $usuario3->NombreCompleto = 'Pedro Segura Montoya';
-        $usuario3->Correo = 'Pedro@mail.com';
+        $usuario3->Correo = 'contacto@spestechnical.com';
         $usuario3->TipoUsuario = 0;
         $usuario3->save();
     }
